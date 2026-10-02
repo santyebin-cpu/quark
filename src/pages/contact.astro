@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionNumber from '../components/SectionNumber.astro';
@@ -62,7 +63,7 @@ const offices = [
               Send message
               <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
             </button>
-            <p class="textSmall muted">We never share your information. See our <a href="/privacy">privacy policy</a>.</p>
+            <p class="textSmall muted">We never share your information. See our <a href={withBase('/privacy')}>privacy policy</a>.</p>
           </div>
           <p class="form__status" role="status" aria-live="polite" data-form-status></p>
         </form>

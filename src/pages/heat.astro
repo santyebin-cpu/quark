@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionNumber from '../components/SectionNumber.astro';
@@ -118,11 +119,11 @@ const uses = [
             displacing about 1.2 million tonnes of CO₂ per year.
           </p>
           <div class="pageHero__actions">
-            <a class="btnMain btnMain--solid" href="/contact">
+            <a class="btnMain btnMain--solid" href={withBase('/contact')}>
               Talk to Quark Heat
               <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
             </a>
-            <a class="btnMain" href="/hadron#fact-sheet">
+            <a class="btnMain" href={withBase('/hadron#fact-sheet')}>
               Hadron fact sheet
               <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
             </a>

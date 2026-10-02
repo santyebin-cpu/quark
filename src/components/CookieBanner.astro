@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 ---
 
 <div class="cookie" data-cookie hidden role="region" aria-label="Cookie notice">
@@ -10,7 +11,7 @@
     </p>
     <div class="cookie__row">
       <p class="cookie__text">
-        For more information on the types of information we collect, visit our <a href="/cookie"><strong>Cookie Notice.</strong></a>
+        For more information on the types of information we collect, visit our <a href={withBase('/cookie')}><strong>Cookie Notice.</strong></a>
       </p>
       <button class="cookie__accept textSmall" type="button" data-cookie-accept>
         Accept

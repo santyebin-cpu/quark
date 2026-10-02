@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import Logo from './Logo.astro';
 import { primaryNav, secondaryNav, site } from '../data/site';
 
@@ -12,7 +13,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 <header class:list={['nav', { 'nav--dark': dark }]} data-nav>
   <div class="nav__bar">
-    <a class="nav__logo" href="/" aria-label={`${site.name} home`}>
+    <a class="nav__logo" href={withBase('/')} aria-label={`${site.name} home`}>
       <Logo />
     </a>
 
@@ -21,7 +22,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
         {
           primaryNav.map((item) => (
             <li class="nav__link">
-              <a class:list={['nav__item', { 'is-active': path.startsWith(item.href) }]} href={item.href}>
+              <a class:list={['nav__item', { 'is-active': path.startsWith(withBase(item.href)) }]} href={withBase(item.href)}>
                 {item.label}
                 {item.registered && <span class="nav__r">®</span>}
                 <svg aria-hidden="true" class="nav__arrow">
@@ -51,7 +52,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   <div class="menu__underlay" data-menu-underlay></div>
   <div class="menu">
     <div class="menu__inner">
-      <a class="menu__logo" href="/" aria-label={`${site.name} home`}>
+      <a class="menu__logo" href={withBase('/')} aria-label={`${site.name} home`}>
         <Logo />
       </a>
       <div class="menu__main">
@@ -59,7 +60,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
           {
             primaryNav.map((item, i) => (
               <li class="menuItem" style={`--i:${i}`}>
-                <a class="menuItem__link" href={item.href}>
+                <a class="menuItem__link" href={withBase(item.href)}>
                   <h2>{item.label}</h2>
                   {item.registered && <span class="menuItem__r">®</span>}
                   <svg aria-hidden="true" class="menuItem__arrow">
@@ -74,7 +75,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
           {
             secondaryNav.map((item, i) => (
               <li style={`--i:${i + primaryNav.length}`}>
-                <a class="menu__secondaryLink" href={item.href}>
+                <a class="menu__secondaryLink" href={withBase(item.href)}>
                   {item.label}
                 </a>
               </li>

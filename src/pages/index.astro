@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import HeroCanvas from '../components/HeroCanvas.astro';
 import SectionNumber from '../components/SectionNumber.astro';
@@ -57,7 +58,7 @@ const stats = [
             added as demand grows.
           </h3>
           <p class="reveal" style="--delay:220ms">Our first Hadron plant is currently being built in {site.firstSite}.</p>
-          <a class="btnMain reveal" style="--delay:300ms" href="/idaho">
+          <a class="btnMain reveal" style="--delay:300ms" href={withBase('/idaho')}>
             The {site.firstSite} project
             <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
           </a>
@@ -98,7 +99,7 @@ const stats = [
             inside a single forged vessel that ships complete by rail. Standardized modules mean repeatable quality,
             predictable schedules and costs that fall with every unit we build.
           </p>
-          <a class="linkArrow reveal" style="--delay:200ms" href="/hadron">
+          <a class="linkArrow reveal" style="--delay:200ms" href={withBase('/hadron')}>
             How Hadron works
             <svg aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
           </a>
@@ -125,7 +126,7 @@ const stats = [
             and solar fall off and stepping back when they return. A six-module plant behaves like a gigawatt-scale
             battery that never runs down.
           </p>
-          <a class="linkArrow reveal" style="--delay:200ms" href="/hadron#grid">
+          <a class="linkArrow reveal" style="--delay:200ms" href={withBase('/hadron#grid')}>
             Hadron on the grid
             <svg aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
           </a>
@@ -164,7 +165,7 @@ const stats = [
         {stats.map((s, i) => <Stat {...s} index={i} />)}
       </ul>
       <div class="advantage__cta">
-        <a class="btnMain" href="/hadron#fact-sheet">
+        <a class="btnMain" href={withBase('/hadron#fact-sheet')}>
           Hadron fact sheet
           <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
         </a>
@@ -181,7 +182,7 @@ const stats = [
           label="Hadron"
           title="The Hadron plant"
           body="An 80 MWe integral reactor, factory-built and passively safe. Learn how the Hadron module redefines what a nuclear plant can be."
-          href="/hadron"
+          href={withBase('/hadron')}
           cta="Explore Hadron"
         />
         <CtaBox
@@ -189,7 +190,7 @@ const stats = [
           label="Quark Heat"
           title="Heat for industry"
           body="Hadron modules supply 320 ºC process steam to refineries, chemical plants and data centers that need to decarbonize without downtime."
-          href="/heat"
+          href={withBase('/heat')}
           cta="Explore Quark Heat"
           art="art--warm"
         />

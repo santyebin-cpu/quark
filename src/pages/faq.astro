@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionNumber from '../components/SectionNumber.astro';
@@ -48,7 +49,7 @@ import { faq } from '../data/faq';
         <div class="prose reveal">
           <p>Our team answers questions from communities, customers and students every week.</p>
           <div class="pageHero__actions">
-            <a class="btnMain btnMain--solid" href="/contact">
+            <a class="btnMain btnMain--solid" href={withBase('/contact')}>
               Ask a question
               <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
             </a>

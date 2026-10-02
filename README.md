@@ -49,6 +49,22 @@ public/         favicon.svg
 | `/contact` | Contact form (client-side only), offices, direct lines |
 | `/terms`, `/privacy`, `/cookie` | Legal |
 
+## Deploying
+
+The site is fully static (`dist/`), so any static host works. Internal links go through `withBase()` in `src/lib/paths.ts`, so the build also works under a sub-path.
+
+**GitHub Pages** (`.github/workflows/deploy-pages.yml`)
+Pushes to `main` build and deploy to `https://<owner>.github.io/quark/`. GitHub Pages on a private repository requires GitHub Pro/Team; either make the repo public or upgrade. If the first run fails on "Configure Pages", go to Settings → Pages and set Source to "GitHub Actions", then re-run the workflow.
+
+**Netlify** (`netlify.toml`)
+Import the repo at app.netlify.com; build settings are detected from `netlify.toml`.
+
+**Vercel** (`vercel.json`)
+Import the repo at vercel.com/new; Astro is detected automatically and `cleanUrls` serves `/hadron` from `hadron.html`.
+
+**Cloudflare Pages**
+Create a Pages project from the repo with build command `npm run build` and output directory `dist`.
+
 ## Notes
 
 - Brand and navigation copy lives in `src/data/site.ts`; change the product or company name there.

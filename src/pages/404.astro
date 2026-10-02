@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import HeroCanvas from '../components/HeroCanvas.astro';
 ---
@@ -10,7 +11,7 @@ import HeroCanvas from '../components/HeroCanvas.astro';
       <p class="textSmall muted">404</p>
       <h1 class="textXL">Not <span>found</span></h1>
       <p class="textH4 muted">The page you were looking for has decayed into something else.</p>
-      <a class="btnMain" href="/">
+      <a class="btnMain" href={withBase('/')}>
         Back to the homepage
         <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-right" /></svg>
       </a>

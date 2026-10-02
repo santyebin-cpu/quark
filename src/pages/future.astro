@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionNumber from '../components/SectionNumber.astro';
@@ -107,7 +108,7 @@ const timeline = [
             Hadron module that preceded it. The first commercial Hadron-HT module is targeted for the early 2030s.
           </p>
           <div class="pageHero__actions">
-            <a class="btnMain" href="/news">
+            <a class="btnMain" href={withBase('/news')}>
               Follow our progress
               <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
             </a>

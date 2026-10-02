@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionNumber from '../components/SectionNumber.astro';
@@ -96,7 +97,7 @@ const roles = [
             {
               roles.map((r) => (
                 <li class="reveal">
-                  <a class="role row" href={`/contact?subject=${encodeURIComponent('Application: ' + r.title)}`}>
+                  <a class="role row" href={withBase(`/contact?subject=${encodeURIComponent('Application: ' + r.title)}`)}>
                     <div class="role__meta">
                       <p class="textSmall muted">{r.team}</p>
                       <p class="textSmall muted">{r.location}</p>
