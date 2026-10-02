@@ -1,0 +1,154 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionNumber from '../components/SectionNumber.astro';
+
+const categories = [
+  ['Heavy forgings and vessels', 'Reactor vessel shells, heads, nozzles and steam generator tubesheets to ASME Section III, Division 1.'],
+  ['Nuclear-grade piping and valves', 'Small-bore safety-related piping, isolation valves and passive safety system components.'],
+  ['Instrumentation and control', 'Safety-related I&C platforms, sensors, cabling and digital control room systems.'],
+  ['Fuel and core components', 'Fuel assembly hardware, control rod drive mechanisms, in-core instrumentation.'],
+  ['Civil and structural', 'Below-grade pool construction, seismic isolators, steel liners and modular rebar.'],
+  ['Turbine island and balance of plant', 'Steam turbines, condensers, feedwater systems, switchyard and heat-delivery piping.'],
+  ['Factory equipment and tooling', 'Machining centers, automated welding, non-destructive examination and lifting equipment.'],
+  ['Professional services', 'Engineering, licensing support, construction management and training.'],
+];
+
+const steps = [
+  ['Register', 'Submit your company profile, capabilities and quality certifications through the supplier portal.'],
+  ['Qualify', 'Our supplier quality team reviews your quality program against 10 CFR 50 Appendix B and NQA-1 requirements and schedules an audit where needed.'],
+  ['Bid', 'Qualified suppliers receive requests for proposal for packages matching their capabilities.'],
+  ['Deliver', 'Awarded suppliers join our production schedule with shared tooling, inspection plans and a single quality data system.'],
+];
+---
+
+<Layout title="Suppliers" description="Work with Quark as a supplier of forgings, components, services and construction for Hadron plants.">
+  <PageHero
+    eyebrow="Suppliers"
+    title="Build with us"
+    intro="A Hadron module has roughly 11,000 parts, and a factory producing one module every nine weeks needs a supply chain that thinks in production rates. We are building that supply chain now."
+  >
+    <div class="pageHero__actions">
+      <a class="btnMain btnMain--solid" href="/contact?subject=Supplier%20registration">
+        Register as a supplier
+        <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={2} />
+          <h2 class="textH3 reveal">What we buy</h2>
+        </div>
+        <div class="supplierTable reveal">
+          <div class="rows">
+            {
+              categories.map(([k, v]) => (
+                <div class="row">
+                  <p class="textH4">{k}</p>
+                  <p class="muted">{v}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section onDark darkBlock" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={3} />
+          <h2 class="textH3 reveal">How to work with Quark</h2>
+        </div>
+        <ol class="steps">
+          {
+            steps.map(([k, v], i) => (
+              <li class="reveal" style={`--delay:${i * 80}ms`}>
+                <p class="textH1">{String(i + 1).padStart(2, '0')}</p>
+                <h3 class="textH4">{k}</h3>
+                <p class="muted">{v}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={4} />
+          <h2 class="textH3 reveal">Supplier expectations</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            Safety-related suppliers must hold a quality assurance program meeting 10 CFR 50 Appendix B and ASME NQA-1,
+            and must be able to support commercial-grade dedication where applicable. All suppliers are expected to
+            comply with our Supplier Code of Conduct covering ethics, labor practices, export control and
+            cybersecurity.
+          </p>
+          <p>
+            We give preference to suppliers located near our Columbus factory and plant sites, and we fund training
+            and certification for small manufacturers who want to enter the nuclear supply chain.
+          </p>
+          <p>
+            Questions can be sent to <a class="linkArrow" href="mailto:suppliers@quark.energy">suppliers@quark.energy</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .supplierTable {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 900px) {
+    .supplierTable {
+      grid-column: 4 / span 9;
+    }
+  }
+
+  .steps {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 1.6rem;
+  }
+
+  @media (min-width: 700px) {
+    .steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .steps {
+      grid-column: 4 / span 9;
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .steps li {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2.4rem 0 3.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .steps li .textH1 {
+    color: var(--color-grey-on-black);
+    margin-bottom: 1.6rem;
+  }
+</style>

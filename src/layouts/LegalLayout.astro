@@ -1,0 +1,49 @@
+---
+import Layout from './Layout.astro';
+import PageHero from '../components/PageHero.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  updated: string;
+}
+const { title, description, updated } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <PageHero eyebrow="Legal" title={title} />
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <p class="textSmall muted">Last updated {updated}</p>
+        </div>
+        <div class="prose legal">
+          <slot />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .legal h2 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+
+  .legal p,
+  .legal li {
+    color: var(--color-grey-on-white);
+  }
+
+  .legal ul {
+    padding-left: 1.6rem;
+    list-style: disc;
+  }
+
+  .legal a {
+    color: var(--color-ink);
+    text-decoration: underline;
+  }
+</style>

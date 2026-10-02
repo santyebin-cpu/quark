@@ -1,0 +1,215 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionNumber from '../components/SectionNumber.astro';
+
+const offices = [
+  ['Headquarters', 'Quark Energy, Inc.\n1200 Lattice Way\nBoise, ID 83702'],
+  ['Module factory', '4400 Forge Road\nColumbus, OH 43217'],
+  ['Engineering', '550 South Tryon Street\nCharlotte, NC 28202'],
+  ['Idaho project office', '120 West 2nd South\nSoda Springs, ID 83276'],
+  ['Quark Europe', 'Keilaranta 1\n02150 Espoo, Finland'],
+];
+---
+
+<Layout title="Contact" description="Contact Quark about Hadron plants, Quark Heat, supplier registration, careers or media inquiries.">
+  <PageHero eyebrow="Contact" title="Get in touch" intro="Utilities, industrial customers, suppliers, journalists and neighbors: tell us what you need and the right team will reply within two business days." />
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={2} />
+          <h2 class="textH3 reveal">Send a message</h2>
+        </div>
+        <form class="form reveal" method="post" action="#" data-contact-form novalidate>
+          <div class="form__grid">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="org">Organization</label>
+              <input id="org" name="organization" type="text" autocomplete="organization" />
+            </div>
+            <div class="field">
+              <label for="topic">Topic</label>
+              <select id="topic" name="topic">
+                <option>Hadron plants</option>
+                <option>Quark Heat</option>
+                <option>Supplier registration</option>
+                <option>Careers</option>
+                <option>Idaho project</option>
+                <option>Media</option>
+                <option>General</option>
+              </select>
+            </div>
+            <div class="field field--full">
+              <label for="subject">Subject</label>
+              <input id="subject" name="subject" type="text" />
+            </div>
+            <div class="field field--full">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required></textarea>
+            </div>
+          </div>
+          <div class="form__actions">
+            <button class="btnMain btnMain--solid" type="submit">
+              Send message
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+            </button>
+            <p class="textSmall muted">We never share your information. See our <a href="/privacy">privacy policy</a>.</p>
+          </div>
+          <p class="form__status" role="status" aria-live="polite" data-form-status></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section onDark darkBlock" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={3} />
+          <h2 class="textH3 reveal">Offices</h2>
+        </div>
+        <ul class="offices">
+          {
+            offices.map(([k, v], i) => (
+              <li class="reveal" style={`--delay:${(i % 3) * 70}ms`}>
+                <p class="textSmall muted">{k}</p>
+                <p class="offices__addr">{v}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={4} />
+          <h2 class="textH3 reveal">Direct lines</h2>
+        </div>
+        <div class="prose reveal">
+          <div class="rows">
+            <div class="row"><p class="row__label">General</p><p><a class="linkArrow" href="mailto:hello@quark.energy">hello@quark.energy</a></p></div>
+            <div class="row"><p class="row__label">Media</p><p><a class="linkArrow" href="mailto:press@quark.energy">press@quark.energy</a></p></div>
+            <div class="row"><p class="row__label">Suppliers</p><p><a class="linkArrow" href="mailto:suppliers@quark.energy">suppliers@quark.energy</a></p></div>
+            <div class="row"><p class="row__label">Careers</p><p><a class="linkArrow" href="mailto:careers@quark.energy">careers@quark.energy</a></p></div>
+            <div class="row"><p class="row__label">Idaho community line</p><p>+1 (208) 555-0140</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .form {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 900px) {
+    .form {
+      grid-column: 4 / span 8;
+    }
+  }
+
+  .form__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem 1.6rem;
+  }
+
+  @media (min-width: 700px) {
+    .form__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .field--full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+
+  .form__actions a {
+    text-decoration: underline;
+  }
+
+  .form__status {
+    margin-top: 2rem;
+    color: var(--color-accent-deep);
+    min-height: 1.5em;
+  }
+
+  .offices {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 1.6rem;
+  }
+
+  @media (min-width: 600px) {
+    .offices {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .offices {
+      grid-column: 4 / span 9;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .offices li {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2.4rem 0 3.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .offices__addr {
+    white-space: pre-line;
+    line-height: 1.5;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const status = document.querySelector<HTMLElement>('[data-form-status]');
+
+  // Pre-fill subject from ?subject= links on news/careers pages.
+  const params = new URLSearchParams(window.location.search);
+  const subject = params.get('subject');
+  const email = params.get('email');
+  if (subject) (document.getElementById('subject') as HTMLInputElement | null)?.setAttribute('value', subject);
+  if (email) (document.getElementById('email') as HTMLInputElement | null)?.setAttribute('value', email);
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    const data = new FormData(form);
+    const name = String(data.get('name') || '').trim();
+    if (status) status.textContent = `Thanks${name ? `, ${name}` : ''}. Your message has been received and the ${data.get('topic')} team will reply within two business days.`;
+    form.reset();
+  });
+</script>

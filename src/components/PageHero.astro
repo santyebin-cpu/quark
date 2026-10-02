@@ -1,0 +1,24 @@
+---
+import SectionNumber from './SectionNumber.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  n?: number;
+}
+const { eyebrow, title, intro, n = 1 } = Astro.props;
+---
+
+<section class="pageHero">
+  <div class="maxWidth">
+    <div class="pageHero__eyebrow">
+      <SectionNumber n={n} label={eyebrow} />
+    </div>
+    <div class="grid">
+      <h1 class="textH1 pageHero__title" set:html={title} />
+      {intro && <p class="textH3 pageHero__intro">{intro}</p>}
+      <slot />
+    </div>
+  </div>
+</section>

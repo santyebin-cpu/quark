@@ -1,0 +1,206 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionNumber from '../components/SectionNumber.astro';
+
+const facts = [
+  ['Location', 'Kemmerer Basin Energy Park, Caribou County, Idaho'],
+  ['Configuration', 'Six Hadron modules, 480 MWe'],
+  ['Site history', 'Retiring 420 MW coal station, grid connection and cooling water retained'],
+  ['Construction permit', 'Issued July 2026'],
+  ['First nuclear concrete', 'September 2026'],
+  ['Fuel load (Module 1)', 'Targeted 2028'],
+  ['Commercial operation (full plant)', 'Targeted 2030'],
+  ['Construction workforce', '~ 1,100 at peak'],
+  ['Permanent jobs', '~ 180'],
+];
+
+const milestones = [
+  { when: '2022', what: 'Site selected from 14 candidate locations across four states.' },
+  { when: '2023', what: 'Early site permit application submitted; community benefits agreement signed with Caribou County.' },
+  { when: '2024', what: 'Construction permit application accepted for NRC review. Module Assembly Facility groundbreaking.' },
+  { when: '2026', what: 'Construction permit issued. First nuclear concrete poured.' },
+  { when: '2027', what: 'First Hadron module arrives by rail from Columbus.' },
+  { when: '2028', what: 'Module 1 fuel load and grid synchronization.' },
+];
+---
+
+<Layout
+  title="Idaho"
+  description="The first commercial Hadron plant is under construction in Caribou County, Idaho, on the site of a retiring coal station."
+>
+  <PageHero
+    eyebrow="Idaho"
+    title="Our first plant"
+    intro="Six Hadron modules are being built on the site of a retiring coal station in southeastern Idaho. When complete, the plant will deliver 480 MWe of carbon-free power through transmission lines that already exist."
+  />
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="idaho__hero art reveal">
+        <svg class="idaho__map" viewBox="0 0 1200 500" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1" aria-hidden="true">
+          <path d="M0 380 C150 340 250 300 400 320 S650 420 800 380 1050 260 1200 300" />
+          <path d="M0 420 C200 400 300 360 450 380 S700 460 850 420 1050 320 1200 350" stroke="rgba(255,255,255,0.25)" />
+          <path d="M100 120 L 1100 120" stroke-dasharray="2 8" stroke="rgba(255,255,255,0.3)" />
+          <path d="M620 120 V 300" stroke-dasharray="2 8" stroke="rgba(255,255,255,0.3)" />
+          <circle cx="620" cy="300" r="6" fill="#fff" stroke="none" />
+          <circle cx="620" cy="300" r="22" stroke="rgba(255,255,255,0.6)" />
+          <circle cx="620" cy="300" r="44" stroke="rgba(255,255,255,0.25)" />
+          <text x="660" y="305" fill="#fff" font-size="14" font-family="Instrument Sans, sans-serif" stroke="none">Hadron Idaho — 480 MWe</text>
+          <text x="110" y="110" fill="rgba(255,255,255,0.6)" font-size="12" font-family="Instrument Sans, sans-serif" stroke="none">Existing 345 kV transmission</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={2} />
+          <h2 class="textH3 reveal">From coal to Hadron</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            Coal plants have what new nuclear plants need: switchyards, transmission, cooling water, rail access and a
+            skilled workforce. Hadron's compact footprint and passive safety case let us reuse all of it. The Idaho
+            plant occupies roughly 15 acres of a 900-acre industrial site and connects to the grid through the same
+            345 kV lines that carried coal power for 50 years.
+          </p>
+          <p>
+            Many of the 240 people who worked at the coal station are now training to operate the Hadron plant.
+            Quark's community benefits agreement with Caribou County commits to local hiring targets, apprenticeship
+            funding and a long-term payment in lieu of taxes that exceeds the coal plant's final-year contribution.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={3} />
+          <h2 class="textH3 reveal">Project at a glance</h2>
+        </div>
+        <div class="idaho__table reveal">
+          <div class="rows">
+            {
+              facts.map(([k, v]) => (
+                <div class="row">
+                  <p class="row__label">{k}</p>
+                  <p>{v}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section onDark darkBlock" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={4} />
+          <h2 class="textH3 reveal">Milestones</h2>
+        </div>
+        <ol class="idaho__milestones">
+          {
+            milestones.map((m, i) => (
+              <li class="reveal" style={`--delay:${i * 60}ms`}>
+                <p class="textH3">{m.when}</p>
+                <p class="muted">{m.what}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={5} />
+          <h2 class="textH3 reveal">Community</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            We hold open houses in Soda Springs on the first Thursday of every month and publish construction updates,
+            environmental monitoring data and traffic plans on this page. Residents with questions can reach the Idaho
+            project office directly.
+          </p>
+          <div class="pageHero__actions">
+            <a class="btnMain btnMain--solid" href="/contact">
+              Contact the Idaho project office
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+            </a>
+            <a class="btnMain" href="/careers">
+              Jobs in Idaho
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .idaho__hero {
+    aspect-ratio: 16 / 7;
+    min-height: 32rem;
+    display: grid;
+    place-items: center;
+  }
+
+  .idaho__map {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    fill: none;
+  }
+
+  .idaho__table {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 900px) {
+    .idaho__table {
+      grid-column: 4 / span 9;
+    }
+  }
+
+  .idaho__milestones {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 1.6rem;
+  }
+
+  @media (min-width: 700px) {
+    .idaho__milestones {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .idaho__milestones {
+      grid-column: 4 / span 9;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .idaho__milestones li {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2.4rem 0 3.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+</style>

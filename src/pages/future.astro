@@ -1,0 +1,173 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionNumber from '../components/SectionNumber.astro';
+
+const timeline = [
+  {
+    when: 'January 2021',
+    title: 'Leading the way in partnerships',
+    body: "Quark's Hadron-HT research and development expanded into design and testing activities. The U.S. Department of Energy awarded a five-year, $45 million cost-share award for continued development of the high-temperature Hadron variant, forming a public-private partnership that includes Quark, Great Basin Power, Idaho National Laboratory, the Electric Power Research Institute and the University of Michigan.",
+  },
+  {
+    when: 'As of July 2023',
+    title: '1,000 hours of loop operations',
+    body: 'The Hadron-HT team reached a major milestone with 1,000 hours of operation of the helium test loop in Boise. The loop exercised circulators, heat exchangers, high-temperature valves and instrumentation at 750 ºC for extended periods.',
+  },
+  {
+    when: 'December 2024',
+    title: 'Fuel qualification begins',
+    body: 'Irradiation testing of TRISO fuel compacts for Hadron-HT began at the Advanced Test Reactor. The campaign will qualify the fuel to burnups and temperatures well beyond those expected in commercial operation.',
+  },
+  {
+    when: 'Operational in October 2025',
+    title: 'Integrated Effects Test',
+    body: "Quark and its partners commissioned an Integrated Effects Test (IET) to learn how the Hadron-HT system behaves at larger, commercially relevant scales. The IET began operating at Quark's Boise facility in October 2025 and is producing data for licensing.",
+  },
+];
+---
+
+<Layout
+  title="Future"
+  description="Quark's roadmap beyond the first Hadron plants: the high-temperature Hadron-HT module for 750 ºC industrial heat and hydrogen."
+>
+  <PageHero
+    eyebrow="Future"
+    title="High-temperature<br />Hadron technology"
+    intro="Using nuclear innovation to decarbonize the heaviest industries."
+  />
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="future__hero art art--mint reveal">
+        <div class="future__heroLabel onDark">
+          <p class="textSmall muted">Hadron-HT outlet temperature</p>
+          <p class="textH1">750 ºC</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={2} />
+          <h2 class="textH3 reveal">Nuclear technology to decarbonize industry</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            Quark's high-temperature Hadron project, Hadron-HT, expands the ability of nuclear reactor technology to
+            decarbonize the economy in sectors including and beyond electricity. Hadron-HT is a helium-cooled,
+            TRISO-fueled module that reuses the Hadron plant architecture—below-grade pool, shared turbine island,
+            factory fabrication—while raising outlet temperature from 320 ºC to 750 ºC.
+          </p>
+          <p>
+            Higher temperatures mean more efficient electricity generation and direct access to steelmaking, cement,
+            glass and thermochemical hydrogen production. Its unparalleled design features make it a highly efficient,
+            low-cost and carbon-free energy solution to help utilities and industries reach decarbonization goals that
+            today's reactors cannot touch.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <ol class="timeline">
+        {
+          timeline.map((t, i) => (
+            <li class="timeline__item reveal">
+              <div class="timeline__left">
+                <SectionNumber n={i + 3} />
+                <p class="textSmall muted timeline__when">{t.when}</p>
+              </div>
+              <div class="timeline__right">
+                <h3 class="textH3">{t.title}</h3>
+                <p>{t.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section onDark darkBlock" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={7} />
+          <h2 class="textH3 reveal">Beyond the grid</h2>
+        </div>
+        <div class="prose reveal">
+          <p class="textH4">
+            Hadron-HT is designed to slot into the same pool, the same factory and the same licensing basis as the
+            Hadron module that preceded it. The first commercial Hadron-HT module is targeted for the early 2030s.
+          </p>
+          <div class="pageHero__actions">
+            <a class="btnMain" href="/news">
+              Follow our progress
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .future__hero {
+    aspect-ratio: 16 / 7;
+    min-height: 32rem;
+    display: flex;
+    align-items: flex-end;
+    padding: 3rem;
+  }
+
+  .future__heroLabel {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .timeline {
+    border-top: 1px solid var(--color-line);
+  }
+
+  .timeline__item {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  @media (min-width: 900px) {
+    .timeline__item {
+      grid-template-columns: 3fr 1fr 7fr 1fr;
+      gap: 0 1.6rem;
+      padding: 5rem 0;
+    }
+    .timeline__right {
+      grid-column: 3;
+    }
+  }
+
+  .timeline__left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .timeline__right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+</style>
