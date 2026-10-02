@@ -263,14 +263,13 @@ svg {
   white-space: nowrap;
 }
 
-.desktop-only {
-  display: none;
+@media (max-width: 899px) {
+  .desktop-only {
+    display: none !important;
+  }
 }
 
 @media (min-width: 900px) {
-  .desktop-only {
-    display: block;
-  }
   .mobile-only {
     display: none !important;
   }

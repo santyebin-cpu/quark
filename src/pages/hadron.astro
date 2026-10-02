@@ -244,10 +244,15 @@ const specs = [
 
 <style>
   .hadron__hero {
-    aspect-ratio: 16 / 7;
+    aspect-ratio: 4 / 3;
     display: grid;
     place-items: center;
-    min-height: 32rem;
+  }
+
+  @media (min-width: 900px) {
+    .hadron__hero {
+      aspect-ratio: 16 / 7;
+    }
   }
 
   .hadron__cutaway {
@@ -255,6 +260,8 @@ const specs = [
     z-index: 1;
     width: 92%;
     height: auto;
+    max-height: 90%;
+    aspect-ratio: 1200 / 520;
     fill: none;
   }
 
