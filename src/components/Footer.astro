@@ -1,0 +1,281 @@
+---
+import Logo from './Logo.astro';
+import { primaryNav, secondaryNav, legalNav, site } from '../data/site';
+---
+
+<footer class="footer onDark" data-dark>
+  <div class="maxWidth">
+    <div class="footer__top">
+      <a class="footer__logo" href="/" aria-label={`${site.name} home`}>
+        <Logo />
+      </a>
+      <p class="footer__tagline textH3">
+        Small reactors.<br />
+        <span>Firm, flexible, carbon-free energy for the century ahead.</span>
+      </p>
+    </div>
+
+    <div class="footer__grid">
+      <nav class="footer__col" aria-label="Footer primary">
+        <p class="textSmall footer__heading">Technology</p>
+        <ul>
+          {
+            primaryNav.map((item) => (
+              <li>
+                <a class="footer__link" href={item.href}>
+                  {item.label}
+                  {item.registered && <sup>®</sup>}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <nav class="footer__col" aria-label="Footer company">
+        <p class="textSmall footer__heading">Company</p>
+        <ul>
+          {
+            secondaryNav.map((item) => (
+              <li>
+                <a class="footer__link" href={item.href}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class="footer__col">
+        <p class="textSmall footer__heading">Headquarters</p>
+        <p class="footer__text">
+          {site.legalName}<br />
+          1200 Lattice Way<br />
+          {site.hq} 83702
+        </p>
+        <div class="footer__social">
+          <a href={site.social.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
+            <svg><use href="#icon-linkedin" /></svg>
+          </a>
+          <a href={site.social.x} target="_blank" rel="noreferrer" aria-label="X">
+            <svg><use href="#icon-x" /></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer__col footer__col--cta">
+        <p class="textSmall footer__heading">Stay informed</p>
+        <form class="footer__form" action="/contact" method="get">
+          <label class="sr-only" for="footer-email">Email address</label>
+          <input id="footer-email" type="email" name="email" placeholder="Email address" required />
+          <button type="submit" aria-label="Subscribe">
+            <svg><use href="#icon-arrow-right" /></svg>
+          </button>
+        </form>
+        <p class="footer__text muted">Quarterly updates on Hadron, licensing milestones and job openings.</p>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="textSmall">© {site.year} {site.legalName.toUpperCase()}</p>
+      <p class="textSmall footer__note">The Hadron® reactor is a Quark technology.</p>
+      <ul class="footer__legal">
+        {
+          legalNav.map((item) => (
+            <li>
+              <a class="textSmall" href={item.href}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding: 8rem 0 3rem;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+  }
+
+  @media (min-width: 900px) {
+    .footer {
+      padding: 10rem 0 3rem;
+    }
+  }
+
+  .footer__top {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding-bottom: 6rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  @media (min-width: 900px) {
+    .footer__top {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+  }
+
+  .footer__logo {
+    height: 3.2rem;
+    display: block;
+    width: max-content;
+  }
+
+  .footer__tagline span {
+    color: var(--color-grey-on-black);
+  }
+
+  @media (min-width: 900px) {
+    .footer__tagline {
+      max-width: 48rem;
+      text-align: right;
+    }
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4rem 2rem;
+    padding: 5rem 0 6rem;
+  }
+
+  @media (min-width: 900px) {
+    .footer__grid {
+      grid-template-columns: 2fr 2fr 3fr 4fr;
+      gap: 0 1.6rem;
+    }
+  }
+
+  .footer__heading {
+    color: var(--color-grey-on-black);
+    margin-bottom: 2rem;
+  }
+
+  .footer__col ul li + li {
+    margin-top: 0.9rem;
+  }
+
+  .footer__link {
+    font-size: 1.5rem;
+    transition: color 0.2s ease;
+  }
+
+  .footer__link:hover {
+    color: var(--color-glow);
+  }
+
+  .footer__link sup {
+    font-size: 0.6em;
+  }
+
+  .footer__text {
+    font-size: 1.4rem;
+    line-height: 1.5;
+  }
+
+  .footer__social {
+    display: flex;
+    gap: 1.4rem;
+    margin-top: 2.4rem;
+  }
+
+  .footer__social svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    color: var(--color-grey-on-black);
+    transition: color 0.2s ease;
+  }
+
+  .footer__social a:hover svg {
+    color: var(--color-white);
+  }
+
+  .footer__col--cta {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 900px) {
+    .footer__col--cta {
+      grid-column: auto;
+    }
+  }
+
+  .footer__form {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    margin-bottom: 1.6rem;
+  }
+
+  .footer__form input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    color: var(--color-white);
+    font: inherit;
+    font-size: 1.5rem;
+    padding: 1rem 0;
+    outline: none;
+  }
+
+  .footer__form input::placeholder {
+    color: var(--color-grey-on-black);
+  }
+
+  .footer__form button {
+    width: 3.2rem;
+    height: 3.2rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .footer__form button:hover {
+    background: var(--color-white);
+    color: var(--color-black);
+  }
+
+  .footer__form button svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    padding-top: 2.4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--color-grey-on-black);
+  }
+
+  @media (min-width: 900px) {
+    .footer__bottom {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer__note {
+      margin-left: auto;
+      margin-right: 4rem;
+    }
+  }
+
+  .footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+  }
+
+  .footer__legal a:hover {
+    color: var(--color-white);
+  }
+</style>

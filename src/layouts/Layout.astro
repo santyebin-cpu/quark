@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import Icons from '../components/Icons.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Hero starts dark; nav renders in its inverted state immediately. */
+  dark?: boolean;
+}
+
+const { title, description = site.description, dark = false } = Astro.props;
+const fullTitle = title === site.name ? `${site.name} | Hadron Small Modular Reactor` : `${title} | ${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="theme-color" content={dark ? '#000000' : '#ffffff'} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class:list={{ 'is-dark-start': dark }}>
+    <Icons />
+    <a class="skip sr-only" href="#main">Skip to content</a>
+    <Nav dark={dark} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <CookieBanner />
+
+    <script>
+      // Scroll-reveal
+      const items = document.querySelectorAll<HTMLElement>('.reveal');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                (e.target as HTMLElement).classList.add('is-visible');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+        );
+        items.forEach((el) => io.observe(el));
+      } else {
+        items.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .skip:focus {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 1rem 1.4rem;
+    clip: auto;
+    background: var(--color-white);
+    color: var(--color-ink);
+    border-radius: 999px;
+    z-index: 200;
+  }
+</style>
