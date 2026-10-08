@@ -1,0 +1,15 @@
+---
+interface Props {
+  n: string | number;
+  label?: string;
+  class?: string;
+}
+const { n, label, class: className = '' } = Astro.props;
+const text = String(n).padStart(3, '0');
+---
+
+<div class:list={['sectionNumber', className]}>
+  {label && <span class="sectionNumber__text">{label}</span>}
+  <span class="sectionNumber__border"></span>
+  <span class="sectionNumber__text">{text}</span>
+</div>

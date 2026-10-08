@@ -1,0 +1,204 @@
+---
+import { withBase } from '../lib/paths';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionNumber from '../components/SectionNumber.astro';
+
+const values = [
+  { title: 'Safety is the product', body: 'Every design decision, schedule and budget starts from the safety case. We never trade it for speed.' },
+  { title: 'Build it like a product', body: 'We think in production rates, tolerances and learning curves, not one-off megaprojects.' },
+  { title: 'Show your work', body: 'Analyses are reproducible, assumptions are written down, and anyone can ask why.' },
+  { title: 'Communities are partners', body: 'We build where we are welcome, hire locally and stay for the 60-year life of the plant.' },
+];
+
+const roles = [
+  { title: 'Senior Reactor Physicist', team: 'Core Design', location: 'Boise, ID' },
+  { title: 'Licensing Engineer, Probabilistic Risk Assessment', team: 'Regulatory Affairs', location: 'Boise, ID / Remote' },
+  { title: 'Manufacturing Engineer, Heavy Forgings', team: 'Module Factory', location: 'Columbus, OH' },
+  { title: 'Welding Quality Lead', team: 'Module Factory', location: 'Columbus, OH' },
+  { title: 'Construction Manager, Nuclear Island', team: 'Hadron Idaho', location: 'Soda Springs, ID' },
+  { title: 'Senior Reactor Operator (Trainee)', team: 'Plant Operations', location: 'Soda Springs, ID' },
+  { title: 'Thermal-Hydraulics Engineer', team: 'Safety Analysis', location: 'Charlotte, NC' },
+  { title: 'Commercial Director, Industrial Heat', team: 'Quark Heat', location: 'Houston, TX' },
+  { title: 'Supply Chain Manager, Long-Lead Equipment', team: 'Supply Chain', location: 'Columbus, OH' },
+  { title: 'Software Engineer, Plant Simulation', team: 'Digital Engineering', location: 'Helsinki, FI' },
+  { title: 'Communications Manager', team: 'Communications', location: 'Boise, ID' },
+];
+---
+
+<Layout title="Careers" description="Join Quark and help build the Hadron small modular reactor. Open roles in Boise, Columbus, Charlotte, Soda Springs and Helsinki.">
+  <PageHero
+    eyebrow="Careers"
+    title="Build the plant<br />that builds itself"
+    intro="Quark is 640 engineers, operators, machinists, physicists and project managers who believe nuclear energy should be built like a product. We are hiring across every discipline that touches the Hadron plant."
+  >
+    <div class="pageHero__actions">
+      <a class="btnMain btnMain--solid" href="#roles">
+        Open roles
+        <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-down" /></svg>
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={2} />
+          <h2 class="textH3 reveal">How we work</h2>
+        </div>
+        <ul class="values">
+          {
+            values.map((v, i) => (
+              <li class="reveal" style={`--delay:${(i % 2) * 90}ms`}>
+                <p class="textSmall muted">{String(i + 1).padStart(2, '0')}</p>
+                <h3 class="textH4">{v.title}</h3>
+                <p class="muted">{v.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section onDark darkBlock" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={3} />
+          <h2 class="textH3 reveal">Benefits</h2>
+        </div>
+        <div class="prose reveal">
+          <ul class="bulletList">
+            <li>Competitive salary and equity in Quark</li>
+            <li>Medical, dental and vision coverage, 100 percent of premiums paid for employees and dependents</li>
+            <li>Six percent 401(k) match with immediate vesting</li>
+            <li>Sixteen weeks of paid parental leave</li>
+            <li>Relocation support for Idaho, Ohio, North Carolina and Finland</li>
+            <li>Tuition and professional licensing reimbursement, including Senior Reactor Operator training</li>
+            <li>Four weeks of vacation plus the week between Christmas and New Year's Day</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="roles">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={4} />
+          <h2 class="textH3 reveal">Open roles</h2>
+          <p class="muted reveal" style="--delay:100ms">{roles.length} positions</p>
+        </div>
+        <div class="roles">
+          <ul class="rows">
+            {
+              roles.map((r) => (
+                <li class="reveal">
+                  <a class="role row" href={withBase(`/contact?subject=${encodeURIComponent('Application: ' + r.title)}`)}>
+                    <div class="role__meta">
+                      <p class="textSmall muted">{r.team}</p>
+                      <p class="textSmall muted">{r.location}</p>
+                    </div>
+                    <div class="role__title">
+                      <h3 class="textH4">{r.title}</h3>
+                      <svg aria-hidden="true">
+                        <use href="#icon-arrow-top-right" />
+                      </svg>
+                    </div>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="muted roles__note">
+            Don't see the right role? Send a resume to <a class="linkArrow" href="mailto:careers@quark.energy">careers@quark.energy</a> and tell us what you want to build.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .values {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 1.6rem;
+  }
+
+  @media (min-width: 700px) {
+    .values {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .values {
+      grid-column: 4 / span 9;
+    }
+  }
+
+  .values li {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2.4rem 0 3.2rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .roles {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 900px) {
+    .roles {
+      grid-column: 4 / span 9;
+    }
+  }
+
+  .role {
+    transition: padding-left 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .role:hover {
+    padding-left: 1.2rem;
+  }
+
+  .role__meta {
+    display: flex;
+    gap: 1.6rem;
+  }
+
+  @media (min-width: 900px) {
+    .role__meta {
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+  }
+
+  .role__title {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.6rem;
+  }
+
+  .role__title svg {
+    flex: none;
+    width: 1.4rem;
+    height: 1.4rem;
+    margin-top: 0.3rem;
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .role:hover .role__title svg {
+    transform: translate(0.3rem, -0.3rem);
+  }
+
+  .roles__note {
+    margin-top: 3rem;
+  }
+</style>

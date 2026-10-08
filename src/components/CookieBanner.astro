@@ -1,0 +1,113 @@
+---
+import { withBase } from '../lib/paths';
+---
+
+<div class="cookie" data-cookie hidden role="region" aria-label="Cookie notice">
+  <div class="cookie__inner">
+    <p class="textSmall cookie__title">This site uses cookies</p>
+    <p class="cookie__text">
+      To optimize your user experience, we serve cookies on this site. <strong>By clicking or navigating you agree to
+      allow our usage of cookies.</strong>
+    </p>
+    <div class="cookie__row">
+      <p class="cookie__text">
+        For more information on the types of information we collect, visit our <a href={withBase('/cookie')}><strong>Cookie Notice.</strong></a>
+      </p>
+      <button class="cookie__accept textSmall" type="button" data-cookie-accept>
+        Accept
+        <svg aria-hidden="true"><use href="#icon-plus" /></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cookie {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 80;
+    background: rgba(30, 30, 32, 0.92);
+    color: var(--color-white);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transform: translateY(100%);
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .cookie[hidden] {
+    display: none;
+  }
+
+  .cookie.is-visible {
+    transform: none;
+  }
+
+  .cookie__inner {
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 2.4rem var(--gutter) 2.8rem;
+  }
+
+  .cookie__title {
+    color: var(--color-grey-on-black);
+    margin-bottom: 1.6rem;
+  }
+
+  .cookie__text {
+    font-size: 1.3rem;
+    line-height: 1.45;
+  }
+
+  .cookie__text + .cookie__row {
+    margin-top: 1.6rem;
+  }
+
+  .cookie__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .cookie__accept {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    padding: 0.4rem 0;
+  }
+
+  .cookie__accept svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    padding: 0.25rem;
+    transition: transform 0.3s ease;
+  }
+
+  .cookie__accept:hover svg {
+    transform: rotate(90deg);
+  }
+</style>
+
+<script>
+  const KEY = 'quark-cookies-accepted';
+  const el = document.querySelector<HTMLElement>('[data-cookie]');
+  const accept = document.querySelector<HTMLButtonElement>('[data-cookie-accept]');
+
+  if (el && !localStorage.getItem(KEY)) {
+    el.hidden = false;
+    window.setTimeout(() => el.classList.add('is-visible'), 1200);
+  }
+
+  accept?.addEventListener('click', () => {
+    localStorage.setItem(KEY, '1');
+    el?.classList.remove('is-visible');
+    window.setTimeout(() => {
+      if (el) el.hidden = true;
+    }, 600);
+  });
+</script>
