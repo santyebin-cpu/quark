@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://quark.energy',
+  site: 'https://qarkenergy.com',
   trailingSlash: 'never',
   build: {
     format: 'file',
