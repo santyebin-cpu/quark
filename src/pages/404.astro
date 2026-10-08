@@ -8,9 +8,9 @@ import HeroCanvas from '../components/HeroCanvas.astro';
   <section class="nf onDark" data-dark>
     <HeroCanvas />
     <div class="nf__inner maxWidth">
-      <p class="textSmall muted">404</p>
+      <p class="textSmall nf__code">404</p>
       <h1 class="textXL">Not <span>found</span></h1>
-      <p class="textH4 muted">The page you were looking for has decayed into something else.</p>
+      <p class="textH4 nf__text">The page you were looking for has decayed into something else.</p>
       <a class="btnMain" href={withBase('/')}>
         Back to the homepage
         <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-right" /></svg>
@@ -38,7 +38,9 @@ import HeroCanvas from '../components/HeroCanvas.astro';
     padding: calc(var(--nav-h) + 4rem) 0 6rem;
   }
 
-  .nf h1 span {
+  .nf h1 span,
+  .nf__code,
+  .nf__text {
     color: var(--color-grey-on-black);
   }
 </style>

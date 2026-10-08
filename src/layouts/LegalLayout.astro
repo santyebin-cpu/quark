@@ -16,7 +16,7 @@ const { title, description, updated } = Astro.props;
     <div class="maxWidth">
       <div class="grid">
         <div class="side">
-          <p class="textSmall muted">Last updated {updated}</p>
+          <p class="textSmall legal__updated">Last updated {updated}</p>
         </div>
         <div class="prose legal">
           <slot />
@@ -27,6 +27,10 @@ const { title, description, updated } = Astro.props;
 </Layout>
 
 <style is:global>
+  .legal__updated {
+    color: var(--color-text-muted);
+  }
+
   .legal h2 {
     font-size: 1.8rem;
     line-height: 1.2;

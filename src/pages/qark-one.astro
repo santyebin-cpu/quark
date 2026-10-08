@@ -1,0 +1,410 @@
+---
+import { Picture } from 'astro:assets';
+import { withBase } from '../lib/paths';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionNumber from '../components/SectionNumber.astro';
+import Render from '../components/Render.astro';
+import { detailData, principalData } from '../data/qark-one';
+import plantCutaway from '../assets/plant/plant-cutaway.jpg';
+import poolHall from '../assets/plant/pool-hall.jpg';
+import blueprint from '../assets/plant/blueprint.webp';
+
+const buildings = [
+  { name: 'Turbine hall', text: 'Steam from the reactor drives a turbine-generator.' },
+  { name: 'Reactor building', text: 'The reactor, with a large pool of water held above it.' },
+  { name: 'Control building', text: 'The control room, electrical and instrumentation systems.' },
+];
+
+const pillars = [
+  {
+    label: 'Thorium fuel',
+    text: '(Th–HALEU)O₂ clusters in 452 vertical channels, with heavy water as the moderator.',
+  },
+  {
+    label: 'Natural circulation',
+    text: 'Boiling water rises through the core to the steam drums and falls back through downcomers. No primary pumps.',
+  },
+  {
+    label: 'On-power refuelling',
+    text: 'A fuelling machine on the reactor deck changes fuel from the top while the reactor keeps running.',
+  },
+];
+
+const safety = [
+  {
+    title: 'Two ways to shut down',
+    text: 'SDS-1 drops shut-off rods into the core. SDS-2 injects a liquid neutron poison into the moderator. Either one can shut the reactor down on its own.',
+  },
+  {
+    title: 'Cooling without power',
+    text: 'Isolation condensers sit in a gravity-driven water pool of about 8,000 m³ high in the reactor building. They carry decay heat away with no pumps and no electricity.',
+  },
+  {
+    title: '72 hours of grace',
+    text: 'If everything else fails, the plant needs no operator action and no outside power for 72 hours.',
+  },
+];
+---
+
+<Layout
+  title="Qark One"
+  description="Qark One is a thorium-fuelled small modular reactor of about 300 MWe for India: natural circulation, on-power refuelling and 72 hours of passive cooling."
+>
+  <PageHero
+    eyebrow="Qark One"
+    title="Thorium power,<br />refuelled while running"
+    intro="Qark One is a thorium-fuelled reactor of about 300 MWe, designed from published data for India’s AHWR-300 LEU. Its coolant circulates without pumps, its fuel is changed while it runs, and it can cool itself for 72 hours with no power or operators."
+  >
+    <div class="pageHero__actions">
+      <a class="btnMain" href="#data">
+        Principal data
+        <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-down" /></svg>
+      </a>
+      <a class="btnMain" href={blueprint.src} target="_blank" rel="noopener">
+        View the drawing
+        <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <Render
+        src={plantCutaway}
+        alt="Concept render of a Qark One plant in cutaway: turbine hall on the left, reactor building in the centre, control building on the right"
+        class="q1__plant"
+        eager
+      />
+      <ul class="q1__buildings">
+        {
+          buildings.map((b, i) => (
+            <li class="reveal" style={`--delay:${i * 80}ms`}>
+              <p class="q1__buildingName">{b.name}</p>
+              <p class="q1__buildingText">{b.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={2} />
+          <h2 class="textH3 reveal">How Qark One works</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            Qark One is a pressure-tube reactor. Its fuel sits in 452 vertical tubes that pass through a tank of heavy
+            water, the calandria. The heavy water slows neutrons so the thorium fuel can sustain its chain reaction, and
+            it stays at low pressure and temperature.
+          </p>
+          <p>
+            Ordinary water flows up through each tube and boils as it passes the fuel. The mix of steam and water rises
+            about 39 metres to four steam drums, where the steam is separated and sent to the turbine, while the water
+            falls back to the bottom of the core. Gravity and the difference in density keep this loop moving, so the
+            main circuit has no pumps.
+          </p>
+          <p>
+            Fuel is changed from above while the reactor keeps running, so Qark One does not need to shut down to
+            refuel.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section onDark darkBlock" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={3} />
+          <h2 class="textH3 reveal">Three ideas at the core</h2>
+        </div>
+      </div>
+      <ul class="pillars">
+        {
+          pillars.map((p, i) => (
+            <li class="reveal" style={`--delay:${i * 100}ms`}>
+              <p class="textSmall pillars__label">{p.label}</p>
+              <p class="textH4">{p.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="safety">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={4} />
+          <h2 class="textH3 reveal">Safe by design</h2>
+        </div>
+        <div class="prose reveal">
+          <p class="textH4">
+            Qark One is designed so that gravity and natural circulation, not pumps and operators, keep it safe when
+            something goes wrong.
+          </p>
+        </div>
+      </div>
+      <div class="grid q1__safety">
+        <Render
+          src={poolHall}
+          alt="Concept render of an underground reactor building with deep pools of water"
+          class="q1__pool"
+          sizes="(min-width: 900px) 55vw, 100vw"
+          dark
+        />
+        <ol class="q1__safetyList">
+          {
+            safety.map((s, i) => (
+              <li class="reveal" style={`--delay:${i * 90}ms`}>
+                <h3 class="q1__safetyTitle">{s.title}</h3>
+                <p>{s.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section q1__drawing onDark" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={5} />
+          <h2 class="textH3 reveal">The drawing</h2>
+          <p class="q1__drawingNote reveal" style="--delay:100ms">
+            General arrangement QE-GA-001, rev A. Concept status, not for construction.
+          </p>
+        </div>
+      </div>
+      <a class="q1__sheet reveal" href={blueprint.src} target="_blank" rel="noopener">
+        <Picture
+          src={blueprint}
+          widths={[640, 960, 1280, 1600, 2000]}
+          formats={['avif', 'webp']}
+          sizes="(min-width: 900px) 92vw, 100vw"
+          alt="General arrangement drawing QE-GA-001 for Qark One: reactor block section, core lattice plan, coolant channel detail, parts list and principal data"
+          loading="lazy"
+        />
+        <span class="q1__sheetHint textSmall">Open full size</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="data">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={6} />
+          <h2 class="textH2 reveal">Principal data</h2>
+          <p class="q1__dataNote reveal" style="--delay:100ms">
+            Reference values from drawing QE-GA-001, indicative of published AHWR-300 LEU data. Dimensions are
+            approximate and will change as the design develops.
+          </p>
+        </div>
+        <div class="q1__table reveal">
+          <div class="rows tabular">
+            {
+              [...principalData, ...detailData].map(([k, v]) => (
+                <div class="row">
+                  <p class="row__label">{k}</p>
+                  <p>{v}</p>
+                </div>
+              ))
+            }
+          </div>
+          <div class="q1__actions">
+            <a class="btnMain btnMain--solid" href={withBase('/contact?topic=partners')}>
+              Request the technical brief
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* :global because the class lands on the figure rendered inside Render.astro. */
+  .maxWidth :global(.q1__plant) {
+    aspect-ratio: 2000 / 1116;
+  }
+
+  .q1__buildings {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 1.6rem;
+    margin-top: 3.2rem;
+  }
+
+  @media (min-width: 700px) {
+    .q1__buildings {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .q1__buildings li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.6rem 0 2rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .q1__buildingName {
+    font-weight: 500;
+  }
+
+  .q1__buildingText {
+    color: var(--color-text-muted);
+  }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem 1.6rem;
+    margin-top: 6rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  @media (min-width: 900px) {
+    .pillars {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .pillars li {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .pillars__label {
+    color: var(--color-grey-on-black);
+  }
+
+  .q1__safety {
+    row-gap: 4rem;
+    margin-top: 6rem;
+    align-items: center;
+  }
+
+  .q1__safety :global(.q1__pool) {
+    grid-column: 1 / -1;
+    aspect-ratio: 2000 / 1116;
+  }
+
+  .q1__safetyList {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 3.2rem;
+  }
+
+  @media (min-width: 900px) {
+    .q1__safety :global(.q1__pool) {
+      grid-column: 1 / span 7;
+    }
+    .q1__safetyList {
+      grid-column: 9 / span 4;
+    }
+  }
+
+  .q1__safetyList li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .q1__safetyList p {
+    color: var(--color-text-muted);
+  }
+
+  .q1__safetyTitle {
+    font-size: 1.8rem;
+    font-weight: 500;
+  }
+
+  .q1__drawing {
+    background: var(--color-navy);
+  }
+
+  .q1__drawingNote {
+    color: rgba(255, 255, 255, 0.62);
+    max-width: 30rem;
+  }
+
+  .q1__sheet {
+    position: relative;
+    display: block;
+    margin-top: 4rem;
+    overflow: hidden;
+    border-radius: var(--radius);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .q1__sheet :global(img) {
+    width: 100%;
+    height: auto;
+    transition: transform 1.2s var(--ease-out);
+  }
+
+  .q1__sheetHint {
+    position: absolute;
+    right: 1.2rem;
+    bottom: 1.2rem;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--color-ink);
+    opacity: 0;
+    transform: translate3d(0, 0.4rem, 0);
+    transition:
+      opacity 0.3s var(--ease-out),
+      transform 0.3s var(--ease-out);
+  }
+
+  .q1__sheet:focus-visible .q1__sheetHint {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .q1__sheet:hover :global(img) {
+      transform: scale(1.015);
+    }
+    .q1__sheet:hover .q1__sheetHint {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .q1__dataNote {
+    color: var(--color-text-muted);
+  }
+
+  .q1__table {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 900px) {
+    .q1__table {
+      grid-column: 4 / span 9;
+    }
+  }
+
+  .q1__actions {
+    margin-top: 4rem;
+  }
+</style>

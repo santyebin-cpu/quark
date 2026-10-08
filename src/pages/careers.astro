@@ -3,38 +3,50 @@ import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionNumber from '../components/SectionNumber.astro';
+import { site } from '../data/site';
 
 const values = [
-  { title: 'Safety is the product', body: 'Every design decision, schedule and budget starts from the safety case. We never trade it for speed.' },
-  { title: 'Build it like a product', body: 'We think in production rates, tolerances and learning curves, not one-off megaprojects.' },
-  { title: 'Show your work', body: 'Analyses are reproducible, assumptions are written down, and anyone can ask why.' },
-  { title: 'Communities are partners', body: 'We build where we are welcome, hire locally and stay for the 60-year life of the plant.' },
+  {
+    title: 'Safety is the design',
+    body: 'Every decision starts from the safety case. We never trade it for speed.',
+  },
+  {
+    title: 'Show your work',
+    body: 'Analyses are reproducible, assumptions are written down, and anyone can ask why.',
+  },
+  {
+    title: 'Build in India',
+    body: 'We design for Indian industry, Indian sites and the people who will run these plants for decades.',
+  },
+  {
+    title: 'Shape it early',
+    body: 'Qark One is at concept stage. The people who join now decide what it becomes.',
+  },
 ];
 
-const roles = [
-  { title: 'Senior Reactor Physicist', team: 'Core Design', location: 'Boise, ID' },
-  { title: 'Licensing Engineer, Probabilistic Risk Assessment', team: 'Regulatory Affairs', location: 'Boise, ID / Remote' },
-  { title: 'Manufacturing Engineer, Heavy Forgings', team: 'Module Factory', location: 'Columbus, OH' },
-  { title: 'Welding Quality Lead', team: 'Module Factory', location: 'Columbus, OH' },
-  { title: 'Construction Manager, Nuclear Island', team: 'Hadron Idaho', location: 'Soda Springs, ID' },
-  { title: 'Senior Reactor Operator (Trainee)', team: 'Plant Operations', location: 'Soda Springs, ID' },
-  { title: 'Thermal-Hydraulics Engineer', team: 'Safety Analysis', location: 'Charlotte, NC' },
-  { title: 'Commercial Director, Industrial Heat', team: 'Quark Heat', location: 'Houston, TX' },
-  { title: 'Supply Chain Manager, Long-Lead Equipment', team: 'Supply Chain', location: 'Columbus, OH' },
-  { title: 'Software Engineer, Plant Simulation', team: 'Digital Engineering', location: 'Helsinki, FI' },
-  { title: 'Communications Manager', team: 'Communications', location: 'Boise, ID' },
+const disciplines = [
+  { title: 'Reactor physics', area: 'Core and fuel' },
+  { title: 'Thermal-hydraulics', area: 'Natural circulation and passive cooling' },
+  { title: 'Fuel design and materials', area: 'Thorium–HALEU fuel' },
+  { title: 'Mechanical and structural design', area: 'Reactor block and plant' },
+  { title: 'Safety analysis and licensing', area: 'Safety case' },
+  { title: 'Instrumentation and control', area: 'Shutdown and control systems' },
+  { title: 'Manufacturing and supply chain', area: 'Indian industry' },
 ];
 ---
 
-<Layout title="Careers" description="Join Quark and help build the Hadron small modular reactor. Open roles in Boise, Columbus, Charlotte, Soda Springs and Helsinki.">
+<Layout
+  title="Careers"
+  description="Join Qark Energy and help design Qark One, India's thorium-fuelled small modular reactor."
+>
   <PageHero
     eyebrow="Careers"
-    title="Build the plant<br />that builds itself"
-    intro="Quark is 640 engineers, operators, machinists, physicists and project managers who believe nuclear energy should be built like a product. We are hiring across every discipline that touches the Hadron plant."
+    title="Build India’s<br />thorium reactor"
+    intro="We are a small team designing Qark One, and we are looking for engineers and scientists who want to put India’s thorium to work."
   >
     <div class="pageHero__actions">
       <a class="btnMain btnMain--solid" href="#roles">
-        Open roles
+        Disciplines we hire for
         <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-down" /></svg>
       </a>
     </div>
@@ -51,9 +63,8 @@ const roles = [
           {
             values.map((v, i) => (
               <li class="reveal" style={`--delay:${(i % 2) * 90}ms`}>
-                <p class="textSmall muted">{String(i + 1).padStart(2, '0')}</p>
                 <h3 class="textH4">{v.title}</h3>
-                <p class="muted">{v.body}</p>
+                <p class="values__text">{v.body}</p>
               </li>
             ))
           }
@@ -67,18 +78,17 @@ const roles = [
       <div class="grid">
         <div class="side">
           <SectionNumber n={3} />
-          <h2 class="textH3 reveal">Benefits</h2>
+          <h2 class="textH3 reveal">What you would work on</h2>
         </div>
         <div class="prose reveal">
-          <ul class="bulletList">
-            <li>Competitive salary and equity in Quark</li>
-            <li>Medical, dental and vision coverage, 100 percent of premiums paid for employees and dependents</li>
-            <li>Six percent 401(k) match with immediate vesting</li>
-            <li>Sixteen weeks of paid parental leave</li>
-            <li>Relocation support for Idaho, Ohio, North Carolina and Finland</li>
-            <li>Tuition and professional licensing reimbursement, including Senior Reactor Operator training</li>
-            <li>Four weeks of vacation plus the week between Christmas and New Year's Day</li>
-          </ul>
+          <p class="textH4">
+            At concept stage, every discipline shapes the design: the core and its thorium fuel, the natural-circulation
+            loop, the passive safety systems, the plant around them and how it will be built in India.
+          </p>
+          <p>
+            You would work from the reference data in drawing QE-GA-001 towards a design that India’s regulator can
+            review and Indian industry can build.
+          </p>
         </div>
       </div>
     </div>
@@ -89,18 +99,20 @@ const roles = [
       <div class="grid">
         <div class="side">
           <SectionNumber n={4} />
-          <h2 class="textH3 reveal">Open roles</h2>
-          <p class="muted reveal" style="--delay:100ms">{roles.length} positions</p>
+          <h2 class="textH3 reveal">Disciplines we hire for</h2>
+          <p class="roles__count reveal" style="--delay:100ms">Based in India</p>
         </div>
         <div class="roles">
           <ul class="rows">
             {
-              roles.map((r) => (
+              disciplines.map((r) => (
                 <li class="reveal">
-                  <a class="role row" href={withBase(`/contact?subject=${encodeURIComponent('Application: ' + r.title)}`)}>
+                  <a
+                    class="role row"
+                    href={withBase(`/contact?topic=careers&subject=${encodeURIComponent('Application: ' + r.title)}`)}
+                  >
                     <div class="role__meta">
-                      <p class="textSmall muted">{r.team}</p>
-                      <p class="textSmall muted">{r.location}</p>
+                      <p class="role__area">{r.area}</p>
                     </div>
                     <div class="role__title">
                       <h3 class="textH4">{r.title}</h3>
@@ -113,8 +125,9 @@ const roles = [
               ))
             }
           </ul>
-          <p class="muted roles__note">
-            Don't see the right role? Send a resume to <a class="linkArrow" href="mailto:careers@quark.energy">careers@quark.energy</a> and tell us what you want to build.
+          <p class="roles__note">
+            Tell us which of these fits you, or what else you would bring. Send your CV to
+            <a class="linkArrow" href={`mailto:${site.email.careers}`}>{site.email.careers}</a>.
           </p>
         </div>
       </div>
@@ -150,6 +163,13 @@ const roles = [
     border-top: 1px solid var(--color-line);
   }
 
+  .values__text,
+  .roles__count,
+  .role__meta,
+  .roles__note {
+    color: var(--color-text-muted);
+  }
+
   .roles {
     grid-column: 1 / -1;
   }
@@ -161,23 +181,12 @@ const roles = [
   }
 
   .role {
-    transition: padding-left 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-
-  .role:hover {
-    padding-left: 1.2rem;
+    transition: transform 0.4s var(--ease-out);
   }
 
   .role__meta {
     display: flex;
     gap: 1.6rem;
-  }
-
-  @media (min-width: 900px) {
-    .role__meta {
-      flex-direction: column;
-      gap: 0.8rem;
-    }
   }
 
   .role__title {
@@ -191,11 +200,16 @@ const roles = [
     width: 1.4rem;
     height: 1.4rem;
     margin-top: 0.3rem;
-    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: transform 0.4s var(--ease-out);
   }
 
-  .role:hover .role__title svg {
-    transform: translate(0.3rem, -0.3rem);
+  @media (hover: hover) and (pointer: fine) {
+    .role:hover {
+      transform: translateX(1.2rem);
+    }
+    .role:hover .role__title svg {
+      transform: translate(0.3rem, -0.3rem);
+    }
   }
 
   .roles__note {

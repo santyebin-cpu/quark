@@ -1,0 +1,45 @@
+---
+import { photoSrcset, photoUrl, type Photo } from '../data/media';
+
+interface Props {
+  photo: Photo;
+  /** Rendered width hint for the browser's srcset choice. */
+  sizes?: string;
+  class?: string;
+  eager?: boolean;
+  /** Drift inside the frame while the page scrolls. */
+  parallax?: boolean;
+  /** Open from a clipped, zoomed-in state when first scrolled into view. */
+  reveal?: boolean;
+  /** Fill the positioned parent instead of being a standalone rounded frame. */
+  fill?: boolean;
+}
+
+const {
+  photo,
+  sizes = '100vw',
+  class: className = '',
+  eager = false,
+  parallax = true,
+  reveal = true,
+  fill = false,
+} = Astro.props;
+---
+
+<figure
+  class:list={['photo', className, { 'photo--reveal': reveal, 'photo--fill': fill }]}
+  data-reveal-media={reveal ? '' : undefined}
+  data-parallax={parallax ? '' : undefined}
+>
+  <div class="photo__inner">
+    <img
+      src={photoUrl(photo.id, 1600)}
+      srcset={photoSrcset(photo.id)}
+      sizes={sizes}
+      alt={photo.alt}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  </div>
+  <slot />
+</figure>

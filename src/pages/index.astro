@@ -1,460 +1,1658 @@
 ---
+import { Picture } from 'astro:assets';
 import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import HeroCanvas from '../components/HeroCanvas.astro';
-import SectionNumber from '../components/SectionNumber.astro';
-import Stat from '../components/Stat.astro';
-import CtaBox from '../components/CtaBox.astro';
+import Photo from '../components/Photo.astro';
 import { site } from '../data/site';
+import { photos } from '../data/media';
+import { principalData, threeStages as stages } from '../data/qark-one';
+import plantCutaway from '../assets/plant/plant-cutaway.jpg';
+import factoryHall from '../assets/plant/factory-hall.jpg';
+import poolHall from '../assets/plant/pool-hall.jpg';
+import reactorVessel from '../assets/plant/reactor-vessel.jpg';
+import blueprint from '../assets/plant/blueprint.webp';
 
-const stats = [
-  { icon: 'icon-stat-homes', label: 'Power to 70,000 homes per module', value: '80 MWe' },
-  { icon: 'icon-stat-modules', label: 'Scalable plant configuration', value: '1 – 6 Modules', note: 'Up to 480 MWe on one site' },
-  { icon: 'icon-stat-fuel', label: 'Factory-fabricated', value: '90% of components', note: 'Built off-site, shipped by rail' },
-  { icon: 'icon-stat-safety', label: 'Passive safety', value: 'Zero operator action', note: 'Walk-away safe for an unlimited period' },
-  { icon: 'icon-stat-heat', label: 'High-quality steam for industrial decarbonization', value: '320 ºC' },
-  { icon: 'icon-stat-footprint', label: 'Overall site area', value: '~ 15 acres', note: 'For a six-module, 480 MWe plant' },
-  { icon: 'icon-stat-construction', label: 'Rapid construction', value: '~ 24 Months', note: 'From first nuclear concrete to fuel load' },
-  { icon: 'icon-stat-ramp', label: 'Load following', value: '20 – 100%', note: 'At 5% per minute, per module' },
-  { icon: 'icon-stat-life', label: 'Design life', value: '60 Years', note: 'Refueling every 24 months' },
+const widths = [640, 960, 1280, 1600, 2000];
+const formats = ['avif', 'webp'] as const;
+
+// Split into words at build time so scroll can light them one by one.
+const leadWords =
+  'India aims for 100 GW of nuclear power by 2047, about ten times what it runs today. Getting there takes'.split(' ');
+const highlightWords = 'reactors India can build quickly, run safely and fuel with its own thorium.'.split(' ');
+
+const tourCaptions = [
+  {
+    title: 'The whole plant',
+    text: 'About 300 MWe of firm, carbon-free power from one reactor, on a compact site.',
+  },
+  {
+    title: 'Turbine hall',
+    text: 'Steam from the reactor drives a turbine-generator, the same kind of machine that runs in any thermal power station.',
+  },
+  {
+    title: 'Reactor building',
+    text: 'The reactor sits beneath a pool of about 8,000 m³ of water, held high in the building to cool the core by gravity alone.',
+  },
+  {
+    title: 'Control building',
+    text: 'Operators run the plant from a control room in its own building, beside the electrical and instrumentation systems.',
+  },
+];
+
+const tourLabels = [
+  { label: 'Turbine hall', x: 23, y: 17 },
+  { label: 'Reactor building', x: 55, y: 13 },
+  { label: 'Control building', x: 82, y: 23 },
+];
+
+const safetyData = [
+  ['Grace period', '72 hours without power or operator action'],
+  ['Water pool', 'About 8,000 m³, fed by gravity'],
+  ['Circulation', 'Natural, with no primary pumps'],
+  ['Shutdown', 'Two independent systems'],
+];
+
+const fuelData = [
+  ['Fuel', '(Th–HALEU)O₂, 54-pin clusters'],
+  ['Fuel channels', '452, vertical'],
+  ['Refuelling', 'On power, from the top'],
+];
+
+const doors = [
+  {
+    who: 'Utilities & industry',
+    title: 'Buy power or steam',
+    text: 'Firm electricity, plus steam for industry and desalination.',
+    href: '/industry',
+  },
+  {
+    who: 'Government & partners',
+    title: 'Partner with us',
+    text: 'Engineering, manufacturing and research partners across India.',
+    href: '/contact?topic=partners',
+  },
+  {
+    who: 'Investors',
+    title: 'Invest in Qark One',
+    text: 'Talk to us about funding the next stage of the design.',
+    href: '/contact?topic=investors',
+  },
+  {
+    who: 'Engineers',
+    title: 'Join the team',
+    text: 'Reactor physics, thermal-hydraulics, mechanical design and licensing.',
+    href: '/careers',
+  },
 ];
 ---
 
 <Layout title={site.name} dark>
-  <!-- 001 Hero -->
-  <section class="hero onDark" data-dark>
-    <HeroCanvas />
-    <div class="hero__inner maxWidth">
-      <div class="hero__top">
-        <SectionNumber n={1} label="Clean energy future" class="hero__number" />
+  <!-- Fixed chapter indicator (bottom corners), updated as chapters scroll past -->
+  <div class="chapter" aria-hidden="true">
+    <span class="textSmall" data-chapter-label>{site.productLong}</span>
+    <span class="textSmall" data-chapter-num>001</span>
+  </div>
+
+  <!-- 001–002 Opener: the WebGL core lattice stays pinned behind the hero and the statement -->
+  <div class="opener onDark" data-dark data-hero-scope>
+    <div class="opener__stage">
+      <div class="opener__pin">
+        <HeroCanvas />
       </div>
-      <div class="hero__bottom">
-        <h1 class="textXL hero__title">
-          <span class="hero__word" style="--d:0">Small</span>
-          <span class="hero__word" style="--d:1">by</span>
-          <span class="hero__word" style="--d:2">Design</span>
+    </div>
+
+    <section class="hero" data-chapter={site.productLong} data-n="1">
+      <div class="hero__inner maxWidth">
+        <h1 class="textXL hero__title lines lines--inline" style="--delay:450ms">
+          <span class="line"><span>More power</span></span>
+          <span class="line"><span>for India</span></span>
         </h1>
-        <a class="hero__scroll textSmall" href="#intro">
-          Scroll
-          <svg aria-hidden="true"><use href="#icon-arrow-down" /></svg>
+      </div>
+    </section>
+
+    <section class="statement" data-chapter="India 2047" data-n="2" data-statement>
+      <div class="statement__sticky">
+        <div class="maxWidth">
+          <p class="statement__text">
+            {leadWords.map((w) => <span class="w">{w} </span>)}
+            {highlightWords.map((w) => <span class="w w--hl">{w} </span>)}
+          </p>
+          <a class="learnMore learnMore--light statement__more" href={withBase('/thorium')}>
+            <span>Learn more<br />about thorium</span>
+            <i class="learnMore__dot"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 003 The plant: pinned tour through the cutaway -->
+  <section class="tour" data-chapter="The plant" data-n="3">
+    <div class="maxWidth grid chapterHead">
+      <h2 class="textH1 twoTone lines chapterHead__title">
+        <span class="line"><span>One Plant</span></span>
+        <span class="line"><span>Three Buildings</span></span>
+      </h2>
+      <p class="textH4 chapterHead__intro reveal" style="--delay:120ms">
+        Qark One is a single reactor of about 300 MWe. Scroll through the plant: turbine hall, reactor building and
+        control building, each with one job.
+      </p>
+    </div>
+
+    <div class="tour__track" data-tour>
+      <div class="tour__sticky">
+        <div class="tour__frame">
+          <div class="tour__camera">
+            <Picture
+              src={plantCutaway}
+              widths={widths}
+              formats={formats}
+              sizes="(min-width: 900px) 80vw, 100vw"
+              alt="Concept render of a Qark One plant in cutaway: turbine hall on the left, reactor building in the centre, control building on the right"
+              class="tour__img tour__base"
+              loading="lazy"
+            />
+            <div class="tour__lit" aria-hidden="true">
+              <Picture
+                src={plantCutaway}
+                widths={widths}
+                formats={formats}
+                sizes="(min-width: 900px) 80vw, 100vw"
+                alt=""
+                class="tour__img"
+                loading="lazy"
+              />
+            </div>
+            {
+              tourLabels.map((l) => (
+                <span class="tour__label" style={`left:${l.x}%;top:${l.y}%`}>
+                  <i aria-hidden="true" />
+                  {l.label}
+                </span>
+              ))
+            }
+          </div>
+          <span class="renderTag">Concept render</span>
+        </div>
+
+        <div class="tour__captions">
+          {
+            tourCaptions.map((c, i) => (
+              <div class:list={['tour__caption', { 'is-active': i === 0 }]}>
+                <p class="tour__step textSmall tabular">{i === 0 ? 'Overview' : `${i} / 3`}</p>
+                <h3 class="tour__title">{c.title}</h3>
+                <p class="tour__text">{c.text}</p>
+              </div>
+            ))
+          }
+          <div class="tour__dots" aria-hidden="true">
+            {[1, 2, 3].map(() => <i class="tour__dot" />)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 004 Made in India: the factory render pans while pinned -->
+  <section class="pan" data-chapter="Made in India" data-n="4">
+    <div class="pan__track" data-pan>
+      <div class="pan__sticky">
+        <div class="pan__frame">
+          <div class="pan__strip">
+            <Picture
+              src={factoryHall}
+              widths={widths}
+              formats={formats}
+              sizes="(min-width: 900px) 150vw, 300vw"
+              alt="Concept render of a factory hall where large reactor components are fabricated"
+              class="pan__img"
+              loading="lazy"
+            />
+          </div>
+          <span class="renderTag">Concept render</span>
+          <div class="pan__card">
+            <h2 class="textH1 twoTone lines">
+              <span class="line"><span>Made in</span></span>
+              <span class="line"><span>India</span></span>
+            </h2>
+            <p class="pan__text reveal" style="--delay:120ms">
+              Qark One is designed around components that Indian industry can fabricate in its own workshops and
+              deliver to site for assembly. India’s heavy-engineering firms have been making reactor components for
+              decades.
+            </p>
+            <a class="learnMore reveal" style="--delay:200ms" href={withBase('/india')}>
+              <span>Learn more<br />about building in India</span>
+              <i class="learnMore__dot"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 005 Safe by gravity: the pool hall opens to full-bleed -->
+  <section class="expand" data-chapter="Safe by gravity" data-n="5">
+    <div class="expand__track" data-expand>
+      <div class="expand__sticky">
+        <div class="expand__frame">
+          <Picture
+            src={poolHall}
+            widths={widths}
+            formats={formats}
+            sizes="100vw"
+            alt="Concept render of an underground reactor building with deep pools of water"
+            class="expand__img"
+            loading="lazy"
+          />
+          <div class="expand__shade"></div>
+          <span class="renderTag renderTag--dark">Concept render</span>
+          <div class="expand__overlay maxWidth">
+            <h2 class="textH1 expand__title">
+              <span class="line"><span>Safe by</span></span>
+              <span class="line"><span>Gravity</span></span>
+            </h2>
+            <div class="expand__copy">
+              <p class="textH4">
+                If the plant loses all power, Qark One needs no pumps, no diesel and no operators to stay safe. Water
+                flows down from the pool by gravity, natural circulation carries the heat away, and the core stays
+                cool for 72 hours with no action at all.
+              </p>
+              <dl class="facts facts--light">
+                {
+                  safetyData.map(([k, v]) => (
+                    <div class="facts__row">
+                      <dt>{k}</dt>
+                      <dd>{v}</dd>
+                    </div>
+                  ))
+                }
+              </dl>
+              <a class="learnMore learnMore--light" href={withBase('/qark-one#safety')}>
+                <span>Learn more<br />about passive safety</span>
+                <i class="learnMore__dot"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 006 The reactor: the vessel render, its core glowing -->
+  <section class="vessel" data-chapter="The reactor" data-n="6">
+    <div class="maxWidth grid vessel__grid">
+      <div class="vessel__text">
+        <h2 class="textH1 twoTone lines">
+          <span class="line"><span>Refuelled</span></span>
+          <span class="line"><span>While Running</span></span>
+        </h2>
+        <p class="textH4 reveal" style="--delay:120ms">
+          Qark One burns thorium oxide mixed with high-assay low-enriched uranium (HALEU), packed into 54-pin
+          clusters. Fresh fuel goes in from the top while the reactor keeps running, so the plant never has to shut
+          down just to refuel.
+        </p>
+        <dl class="facts reveal" style="--delay:200ms">
+          {
+            fuelData.map(([k, v]) => (
+              <div class="facts__row">
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <a class="learnMore reveal" style="--delay:260ms" href={withBase('/qark-one')}>
+          <span>Learn more<br />about Qark One</span>
+          <i class="learnMore__dot"></i>
         </a>
       </div>
+      <figure class="photo photo--reveal vessel__plate" data-reveal-media data-parallax>
+        <div class="photo__inner">
+          <Picture
+            src={reactorVessel}
+            widths={widths}
+            formats={formats}
+            sizes="(min-width: 900px) 55vw, 100vw"
+            alt="Concept render of a reactor vessel in cutaway with the core glowing at its base"
+            loading="lazy"
+          />
+          <span class="vessel__glowWrap" aria-hidden="true"><span class="vessel__glow"></span></span>
+        </div>
+        <figcaption class="renderTag">Concept render</figcaption>
+      </figure>
     </div>
   </section>
 
-  <!-- 002 Intro -->
-  <section class="section intro" id="intro">
+  <!-- 007 The design: the drawing draws itself in, then the principal data -->
+  <section class="design onDark" data-dark data-chapter="The design" data-n="7">
     <div class="maxWidth">
-      <div class="grid">
-        <div class="intro__lead">
-          <h2 class="textH2 reveal">
-            Meeting surging global energy demand while preserving a livable planet will require nuclear power that
-            is <span>small enough to build quickly and flexible enough to follow the grid.</span>
-          </h2>
+      <div class="grid chapterHead chapterHead--compact">
+        <h2 class="textH1 lines chapterHead__title design__title">
+          <span class="line"><span>Drawn in</span></span>
+          <span class="line"><span>Detail</span></span>
+        </h2>
+        <p class="textH4 chapterHead__intro reveal" style="--delay:120ms">
+          The general arrangement for Qark One, drawn from published data for the AHWR-300 LEU, the thorium reactor
+          designed by India’s Bhabha Atomic Research Centre.
+        </p>
+      </div>
+
+      <figure class="design__sheet" data-blueprint>
+        <Picture
+          src={blueprint}
+          widths={widths}
+          formats={formats}
+          sizes="(min-width: 900px) 92vw, 100vw"
+          alt="General arrangement drawing QE-GA-001 for Qark One: reactor block section, core lattice plan, coolant channel detail, parts list and principal data"
+          class="design__img"
+          loading="lazy"
+        />
+        <span class="design__scan" aria-hidden="true"></span>
+      </figure>
+
+      <div class="grid design__data">
+        <div class="design__dataHead">
+          <h3 class="textH3">Principal data</h3>
+          <p class="design__note">
+            Concept status. Indicative arrangement from published AHWR-300 LEU data; dimensions approximate, not for
+            construction.
+          </p>
+          <a class="learnMore learnMore--light" href={blueprint.src} target="_blank" rel="noopener">
+            <span>View the<br />full drawing</span>
+            <i class="learnMore__dot"></i>
+          </a>
         </div>
-        <div class="intro__side">
-          <h3 class="textH3 reveal" style="--delay:120ms">
-            The Hadron plant is a step forward for nuclear, delivering firm power in 80 MWe increments that can be
-            added as demand grows.
-          </h3>
-          <p class="reveal" style="--delay:220ms">Our first Hadron plant is currently being built in {site.firstSite}.</p>
-          <a class="btnMain reveal" style="--delay:300ms" href={withBase('/idaho')}>
-            The {site.firstSite} project
-            <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
+        <dl class="facts facts--light facts--wide tabular">
+          {
+            principalData.map(([k, v]) => (
+              <div class="facts__row">
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- 008 Thorium: India's three-stage programme -->
+  <section class="thorium" data-chapter="Thorium" data-n="8">
+    <div class="maxWidth">
+      <div class="grid chapterHead chapterHead--compact">
+        <h2 class="textH1 twoTone lines chapterHead__title">
+          <span class="line"><span>India’s Own</span></span>
+          <span class="line"><span>Fuel</span></span>
+        </h2>
+        <p class="textH4 chapterHead__intro reveal" style="--delay:120ms">
+          India holds one of the world’s largest reserves of thorium, much of it in the monazite sands along its coast.
+          Since the 1950s, its three-stage nuclear programme has aimed to make thorium its main fuel.
+        </p>
+      </div>
+
+      <div class="grid thorium__body">
+        <Photo photo={photos.coast} class="thorium__photo" sizes="(min-width: 900px) 40vw, 100vw" />
+        <div class="thorium__stages">
+          <ol class="stages" data-stages>
+            {
+              stages.map((s, i) => (
+                <li class="stages__item" style={`--i:${i}`}>
+                  <p class="stages__label textSmall">{s.stage}</p>
+                  <h3 class="stages__title">{s.title}</h3>
+                  <p class="stages__text">{s.text}</p>
+                </li>
+              ))
+            }
+          </ol>
+          <p class="thorium__qark reveal">
+            <strong>Qark One</strong> is designed to put thorium to work now, with HALEU as its driver fuel, rather
+            than waiting for stage three.
+          </p>
+          <a class="learnMore reveal" href={withBase('/thorium')}>
+            <span>Learn more<br />about thorium</span>
+            <i class="learnMore__dot"></i>
           </a>
         </div>
       </div>
-      <div class="sectionFooter">
-        <span class="textSmall muted">Hadron</span>
-        <SectionNumber n={2} />
-      </div>
     </div>
   </section>
 
-  <!-- 003 Factory -->
-  <section class="section feature">
+  <!-- 009 Work with us: one door per audience -->
+  <section class="doors" data-chapter="Work with us" data-n="9">
     <div class="maxWidth">
-      <div class="grid feature__grid">
-        <div class="feature__media reveal">
-          <div class="art feature__art">
-            <svg class="feature__diagram" viewBox="0 0 400 520" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" aria-hidden="true">
-              <rect x="120" y="40" width="160" height="440" rx="80" />
-              <rect x="150" y="90" width="100" height="340" rx="50" stroke-dasharray="4 6" />
-              <path d="M200 90v340" />
-              <path d="M150 180h100M150 260h100M150 340h100" />
-              <circle cx="200" cy="260" r="24" />
-              <path d="M90 140h30M90 380h30M280 140h30M280 380h30" />
-              <rect x="40" y="120" width="50" height="40" rx="6" /><rect x="40" y="360" width="50" height="40" rx="6" />
-              <rect x="310" y="120" width="50" height="40" rx="6" /><rect x="310" y="360" width="50" height="40" rx="6" />
-            </svg>
-          </div>
-        </div>
-        <div class="feature__text">
-          <SectionNumber n={3} class="feature__number" />
-          <h3 class="textH3 reveal">
-            The Hadron reactor is built in a factory, not a field.
-          </h3>
-          <p class="reveal" style="--delay:120ms">
-            Each 80 MWe module is an integral pressurized-water reactor: core, steam generators and pressurizer live
-            inside a single forged vessel that ships complete by rail. Standardized modules mean repeatable quality,
-            predictable schedules and costs that fall with every unit we build.
-          </p>
-          <a class="linkArrow reveal" style="--delay:200ms" href={withBase('/hadron')}>
-            How Hadron works
-            <svg aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
-          </a>
-        </div>
-      </div>
-      <div class="sectionFooter">
-        <span class="textSmall muted">Integral module</span>
-        <SectionNumber n={4} />
-      </div>
-    </div>
-  </section>
-
-  <!-- 005 Flexibility -->
-  <section class="section feature feature--flip">
-    <div class="maxWidth">
-      <div class="grid feature__grid">
-        <div class="feature__text">
-          <SectionNumber n={5} class="feature__number" />
-          <h3 class="textH3 reveal">
-            While renewable energy is carbon-free, it is sometimes unavailable due to weather conditions.
-          </h3>
-          <p class="reveal" style="--delay:120ms">
-            Hadron modules ramp between 20 and 100 percent output at 5 percent per minute, filling the gap when wind
-            and solar fall off and stepping back when they return. A six-module plant behaves like a gigawatt-scale
-            battery that never runs down.
-          </p>
-          <a class="linkArrow reveal" style="--delay:200ms" href={withBase('/hadron#grid')}>
-            Hadron on the grid
-            <svg aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
-          </a>
-        </div>
-        <div class="feature__media reveal">
-          <div class="art art--mint feature__art">
-            <svg class="feature__diagram feature__diagram--chart" viewBox="0 0 600 320" fill="none" aria-hidden="true">
-              <path d="M0 240 C80 230 120 90 200 110 S320 260 400 230 540 100 600 120" stroke="rgba(255,255,255,0.35)" stroke-width="1.2" stroke-dasharray="3 6" />
-              <path d="M0 200 C80 210 120 290 200 270 S320 150 400 180 540 290 600 270" stroke="#fff" stroke-width="1.6" />
-              <path d="M0 300h600" stroke="rgba(255,255,255,0.25)" />
-              <text x="12" y="188" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Instrument Sans, sans-serif">Hadron output</text>
-              <text x="12" y="252" fill="rgba(255,255,255,0.5)" font-size="12" font-family="Instrument Sans, sans-serif">Wind + solar</text>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Clear Advantage -->
-  <section class="section advantage">
-    <div class="maxWidth">
-      <div class="grid">
-        <div class="advantage__head">
-          <h2 class="textH1 reveal">Clear Advantage</h2>
-        </div>
-        <div class="advantage__intro">
-          <p class="textH4 reveal" style="--delay:120ms">
-            By moving to a small, standardized plant design, the Hadron technology requires far fewer resources to
-            construct and operate. This results in lower costs, shorter schedules and higher value for the communities
-            that host it.
-          </p>
-        </div>
-      </div>
-      <ul class="advantage__stats">
-        {stats.map((s, i) => <Stat {...s} index={i} />)}
+      <h2 class="textH1 twoTone lines">
+        <span class="line"><span>Work With</span></span>
+        <span class="line"><span>Qark Energy</span></span>
+      </h2>
+      <ul class="doors__list">
+        {
+          doors.map((d, i) => (
+            <li class="doors__item reveal" style={`--delay:${i * 70}ms`}>
+              <a class="door" href={withBase(d.href)}>
+                <span class="door__who textSmall">{d.who}</span>
+                <span class="door__title">{d.title}</span>
+                <span class="door__text">{d.text}</span>
+                <span class="door__arrow" aria-hidden="true">
+                  <svg>
+                    <use href="#icon-arrow-top-right" />
+                  </svg>
+                </span>
+              </a>
+            </li>
+          ))
+        }
       </ul>
-      <div class="advantage__cta">
-        <a class="btnMain" href={withBase('/hadron#fact-sheet')}>
-          Hadron fact sheet
-          <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 006 / 007 CTAs -->
-  <section class="section ctas">
-    <div class="maxWidth">
-      <div class="ctas__grid">
-        <CtaBox
-          n={6}
-          label="Hadron"
-          title="The Hadron plant"
-          body="An 80 MWe integral reactor, factory-built and passively safe. Learn how the Hadron module redefines what a nuclear plant can be."
-          href={withBase('/hadron')}
-          cta="Explore Hadron"
-        />
-        <CtaBox
-          n={7}
-          label="Quark Heat"
-          title="Heat for industry"
-          body="Hadron modules supply 320 ºC process steam to refineries, chemical plants and data centers that need to decarbonize without downtime."
-          href={withBase('/heat')}
-          cta="Explore Quark Heat"
-          art="art--warm"
-        />
-      </div>
     </div>
   </section>
 </Layout>
 
+<script>
+  const clamp = (v: number, min = 0, max = 1) => Math.min(max, Math.max(min, v));
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+  const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+  const reduced = document.documentElement.classList.contains('motion-reduced');
+
+  const $ = (sel: string, root: ParentNode = document) => root.querySelector<HTMLElement>(sel);
+  const $$ = (sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<HTMLElement>(sel));
+
+  // 0 → 1 while a tall pinned track scrolls past.
+  function progressOf(rect: DOMRect, vh: number) {
+    return clamp(-rect.top / Math.max(1, rect.height - vh));
+  }
+
+  /* Statement */
+  const statement = $('[data-statement]');
+  const words = statement ? $$('.w', statement) : [];
+  const statementMore = statement ? $('.statement__more', statement) : null;
+
+  /* Plant tour: camera (centre and zoom over the image) and the lit window for each stop */
+  const tour = $('[data-tour]');
+  const tourCamera = tour ? $('.tour__camera', tour) : null;
+  const tourLit = tour ? $('.tour__lit', tour) : null;
+  const tourLabels = tour ? $$('.tour__label', tour) : [];
+  const tourCaptions = tour ? $$('.tour__caption', tour) : [];
+  const tourDots = tour ? $$('.tour__dot', tour) : [];
+  type Stop = { cx: number; cy: number; z: number; inset: [number, number, number, number] };
+  const stops: Stop[] = [
+    { cx: 0.5, cy: 0.5, z: 1, inset: [0, 0, 0, 0] },
+    { cx: 0.23, cy: 0.44, z: 1.35, inset: [0.08, 0.595, 0.215, 0.055] },
+    { cx: 0.55, cy: 0.5, z: 1.2, inset: [0, 0.295, 0, 0.395] },
+    { cx: 0.82, cy: 0.47, z: 1.4, inset: [0.155, 0.045, 0.215, 0.695] },
+  ];
+  // [start, end, from stop, to stop] as fractions of the pinned track; holds sit between moves.
+  const moves: [number, number, number, number][] = [
+    [0.1, 0.25, 0, 1],
+    [0.37, 0.52, 1, 2],
+    [0.64, 0.79, 2, 3],
+    [0.88, 1, 3, 0],
+  ];
+  function tourAt(p: number) {
+    for (const [s, e, from, to] of moves) {
+      if (p < s) return { from, to: from, t: 0 };
+      if (p <= e) return { from, to, t: easeInOut((p - s) / (e - s)) };
+    }
+    return { from: 0, to: 0, t: 0 };
+  }
+
+  /* Made in India pan */
+  const pan = $('[data-pan]');
+  const panFrame = pan ? $('.pan__frame', pan) : null;
+  const panStrip = pan ? $('.pan__strip', pan) : null;
+  let panDistance = 0;
+  function measurePan() {
+    if (panFrame && panStrip) panDistance = Math.max(0, panStrip.offsetWidth - panFrame.clientWidth);
+  }
+
+  /* Safe by gravity: the photo opens to full-bleed, then the copy arrives */
+  const expand = $('[data-expand]');
+  const expandFrame = expand ? $('.expand__frame', expand) : null;
+  const expandImg = expand ? $('.expand__img', expand) : null;
+  const expandShade = expand ? $('.expand__shade', expand) : null;
+  const expandLines = expand ? $$('.expand__title .line > span', expand) : [];
+  const expandCopy = expand ? $('.expand__copy', expand) : null;
+
+  /* Chapter indicator */
+  const chapterSections = $$('[data-chapter]');
+  const labelEl = $('[data-chapter-label]');
+  const numEl = $('[data-chapter-num]');
+  const chapterEl = $('.chapter');
+  const footer = $('footer');
+
+  let ticking = false;
+
+  function update() {
+    ticking = false;
+    const vh = window.innerHeight;
+
+    // Read phase: every rect first, so the writes below never force a layout in between.
+    const statementRect = statement?.getBoundingClientRect();
+    const tourRect = tour?.getBoundingClientRect();
+    const panRect = pan?.getBoundingClientRect();
+    const expandRect = expand?.getBoundingClientRect();
+    const chapterTops = chapterSections.map((s) => s.getBoundingClientRect().top);
+    const footerTop = footer ? footer.getBoundingClientRect().top : Infinity;
+
+    // Statement: an opacity change only, so it runs in reduced-motion mode too.
+    if (statementRect) {
+      const p = progressOf(statementRect, vh);
+      const lit = clamp(p / 0.75) * (words.length + 1);
+      words.forEach((w, i) => (w.style.opacity = String(0.14 + 0.86 * clamp(lit - i))));
+      if (statementMore) statementMore.style.opacity = String(clamp((p - 0.72) * 6));
+    }
+
+    if (tourRect && tourCamera && tourLit) {
+      const { from, to, t } = tourAt(progressOf(tourRect, vh));
+      const a = stops[from];
+      const b = stops[to];
+      const active = t < 0.5 ? from : to;
+      if (!reduced) {
+        const z = lerp(a.z, b.z, t);
+        // Keep the view inside the image at every zoom.
+        const cx = clamp(lerp(a.cx, b.cx, t), 0.5 / z, 1 - 0.5 / z);
+        const cy = clamp(lerp(a.cy, b.cy, t), 0.5 / z, 1 - 0.5 / z);
+        tourCamera.style.transform = `translate3d(${(0.5 - cx) * 100 * z}%, ${(0.5 - cy) * 100 * z}%, 0) scale(${z})`;
+        const inset = a.inset.map((v, i) => lerp(v, b.inset[i], t) * 100);
+        tourLit.style.clipPath = `inset(${inset[0]}% ${inset[1]}% ${inset[2]}% ${inset[3]}% round 0.6rem)`;
+        tourLabels.forEach((l) => (l.style.transform = `translate(-50%, -100%) scale(${1 / z})`));
+      }
+      tourLabels.forEach((l, i) => l.classList.toggle('is-active', active === i + 1));
+      tourCaptions.forEach((c, i) => c.classList.toggle('is-active', active === i));
+      tourDots.forEach((d, i) => d.classList.toggle('is-active', active === i + 1));
+    }
+
+    if (panRect && panStrip && !reduced) {
+      const p = clamp((progressOf(panRect, vh) - 0.04) / 0.92);
+      panStrip.style.transform = `translate3d(${-panDistance * p}px, 0, 0)`;
+    }
+
+    if (expandRect && expandFrame) {
+      const p = reduced ? 1 : progressOf(expandRect, vh);
+      const e = easeInOut(clamp(p / 0.6));
+      const t = easeOut(clamp((p - 0.6) / 0.25));
+      if (!reduced) {
+        expandFrame.style.clipPath = `inset(${(1 - e) * 17}svh ${(1 - e) * 24}vw round ${(1 - e) * 2}rem)`;
+        if (expandImg) expandImg.style.transform = `scale(${1.32 - e * 0.32})`;
+        expandLines.forEach((l) => (l.style.transform = `translate3d(0, ${(1 - t) * 110}%, 0)`));
+        if (expandCopy) expandCopy.style.transform = `translate3d(0, ${(1 - t) * 3}rem, 0)`;
+      }
+      if (expandShade) expandShade.style.opacity = String(0.25 + t * 0.75);
+      if (expandCopy) expandCopy.style.opacity = String(t);
+    }
+
+    // Active chapter = last section whose top has passed the middle of the viewport.
+    let active = 0;
+    chapterTops.forEach((top, i) => {
+      if (top <= vh * 0.5) active = i;
+    });
+    const section = chapterSections[active];
+    if (section && labelEl && numEl) {
+      labelEl.textContent = section.dataset.chapter || '';
+      numEl.textContent = String(section.dataset.n || 1).padStart(3, '0');
+    }
+    chapterEl?.classList.toggle('is-hidden', footerTop < vh);
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+
+  // One-shot reveals that should wait until a good share of the element is on screen.
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-in');
+          io.unobserve(e.target);
+        }
+      }
+    },
+    { threshold: 0.35 },
+  );
+  $$('[data-blueprint], [data-stages]').forEach((el) => io.observe(el));
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', () => {
+    measurePan();
+    onScroll();
+  });
+  window.addEventListener('load', () => {
+    measurePan();
+    onScroll();
+  });
+  measurePan();
+  update();
+</script>
+
 <style>
-  /* Hero */
-  .hero {
+  /* Chapter indicator */
+  .chapter {
+    position: fixed;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 2rem;
+    z-index: 40;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    mix-blend-mode: difference;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease-out);
+  }
+
+  .chapter.is-hidden {
+    opacity: 0;
+  }
+
+  /* On phones the label would sit on top of body copy; the chapters read without it. */
+  @media (max-width: 599px) {
+    .chapter {
+      display: none;
+    }
+  }
+
+  /* Shared chapter heading: title left, intro right */
+  .chapterHead {
+    row-gap: 3rem;
+    padding: 18rem 0 8rem;
+    align-items: end;
+  }
+
+  .chapterHead--compact {
+    padding-top: 14rem;
+  }
+
+  .chapterHead__title,
+  .chapterHead__intro {
+    grid-column: 1 / -1;
+  }
+
+  .chapterHead__intro {
+    color: var(--color-text-muted);
+    max-width: 52rem;
+  }
+
+  @media (min-width: 900px) {
+    .chapterHead__title {
+      grid-column: 1 / span 6;
+    }
+    .chapterHead__intro {
+      grid-column: 8 / span 5;
+    }
+  }
+
+  /* Small definition lists of facts */
+  .facts {
+    display: grid;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .facts__row {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: 1.6rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .facts dt {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+    letter-spacing: 0.04rem;
+  }
+
+  .facts dd {
+    margin: 0;
+  }
+
+  .facts--light {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  .facts--light .facts__row {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  .facts--light dt {
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  @media (min-width: 900px) {
+    .facts__row {
+      grid-template-columns: 14rem 1fr;
+    }
+    .facts--wide .facts__row {
+      grid-template-columns: 18rem 1fr;
+    }
+  }
+
+  /* Opener */
+  .opener {
     position: relative;
-    min-height: 100svh;
-    overflow: hidden;
-    border-bottom-left-radius: var(--radius);
-    border-bottom-right-radius: var(--radius);
+  }
+
+  /* Spans the whole opener so the pinned canvas releases exactly where the opener ends. */
+  .opener__stage {
+    position: absolute;
+    inset: 0;
+  }
+
+  .opener__pin {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
+
+  .hero,
+  .statement {
+    position: relative;
+    z-index: 1;
   }
 
   .hero__inner {
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-end;
     min-height: 100svh;
-    padding: calc(var(--nav-h) + 4rem) 0 3rem;
-  }
-
-  .hero__number {
-    color: var(--color-grey-on-black);
-  }
-
-  .hero__bottom {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-  }
-
-  @media (min-width: 900px) {
-    .hero__bottom {
-      flex-direction: row;
-      align-items: flex-end;
-      justify-content: space-between;
-    }
+    padding: calc(var(--nav-h) + 4rem) 0 7rem;
   }
 
   .hero__title {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 0.25em;
-    max-width: 90rem;
+    max-width: 120rem;
   }
 
-  .hero__word {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(40%);
-    animation: wordIn 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
-    animation-delay: calc(0.3s + var(--d) * 0.12s);
-  }
-
-  .hero__word:nth-child(2) {
+  .hero__title .line:first-child {
     color: var(--color-grey-on-black);
   }
 
-  @keyframes wordIn {
-    to {
-      opacity: 1;
-      transform: none;
+  /* Statement */
+  .statement {
+    height: 250vh;
+  }
+
+  .statement__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+  }
+
+  .statement__text {
+    max-width: 112rem;
+    font-size: 3rem;
+    line-height: 1.08;
+    letter-spacing: -0.04rem;
+    text-wrap: balance;
+  }
+
+  @media (min-width: 900px) {
+    .statement__text {
+      font-size: 5.6rem;
+      letter-spacing: -0.12rem;
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .hero__word {
-      opacity: 1;
-      transform: none;
-      animation: none;
-    }
+  .statement .w {
+    color: var(--color-grey-on-black);
   }
 
-  .hero__scroll {
+  .statement .w--hl {
+    color: var(--color-white);
+  }
+
+  :global(html.js) .statement .w {
+    opacity: 0.14;
+  }
+
+  .statement__more {
+    margin-top: 5rem;
+  }
+
+  :global(html.js) .statement__more {
+    opacity: 0;
+  }
+
+  /* 003 Plant tour */
+  .tour {
+    background: var(--color-white);
+  }
+
+  .tour__track {
+    height: 420vh;
+  }
+
+  .tour__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.4rem;
+    padding: calc(var(--nav-h) + 2.4rem) var(--gutter) 6rem;
+  }
+
+  .tour__frame {
+    position: relative;
+    width: min(100%, calc((100svh - var(--nav-h) - 24rem) * 1.792));
+    aspect-ratio: 2000 / 1116;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--color-white);
+  }
+
+  .tour__camera {
+    position: absolute;
+    inset: 0;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+
+  .tour :global(.tour__img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* The unlit plant: everything outside the current stop recedes. */
+  .tour :global(.tour__base) {
+    filter: grayscale(1);
+    opacity: 0.3;
+  }
+
+  :global(html.motion-reduced) .tour :global(.tour__base) {
+    filter: none;
+    opacity: 1;
+  }
+
+  .tour__lit {
+    position: absolute;
+    inset: 0;
+    will-change: clip-path;
+  }
+
+  :global(html.motion-reduced) .tour__lit {
+    display: none;
+  }
+
+  .tour__label {
+    position: absolute;
+    z-index: 2;
     display: inline-flex;
     align-items: center;
-    gap: 0.8rem;
-    color: var(--color-grey-on-black);
+    gap: 0.6rem;
+    padding: 0.55rem 1rem 0.55rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 0.4rem 1.6rem rgba(20, 22, 40, 0.1);
+    color: var(--color-ink);
+    font-size: 1.1rem;
     white-space: nowrap;
+    transform: translate(-50%, -100%);
+    transform-origin: 50% 100%;
+    transition: opacity 0.4s var(--ease-out);
   }
 
-  .hero__scroll svg {
-    width: 1rem;
-    height: 1rem;
-    animation: bob 2.2s ease-in-out infinite;
+  .tour__label i {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--color-line);
+    transition: background-color 0.4s var(--ease-out);
   }
 
-  @keyframes bob {
-    0%,
-    100% {
+  .tour__label.is-active i {
+    background: var(--color-accent);
+  }
+
+  @media (max-width: 599px) {
+    .tour__label {
+      display: none;
+    }
+  }
+
+  .tour__captions {
+    position: relative;
+    width: min(100%, calc((100svh - var(--nav-h) - 24rem) * 1.792));
+    min-height: 11rem;
+    margin: 0 auto;
+  }
+
+  .tour__caption {
+    position: absolute;
+    inset: 0 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    max-width: 56rem;
+    opacity: 0;
+    transform: translate3d(0, 1rem, 0);
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.6s var(--ease-out);
+  }
+
+  .tour__caption.is-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(html.motion-reduced) .tour__caption {
+    transform: none;
+  }
+
+  .tour__step {
+    color: var(--color-text-muted);
+  }
+
+  .tour__title {
+    font-size: 2.2rem;
+    font-weight: 500;
+    letter-spacing: -0.02rem;
+  }
+
+  .tour__text {
+    color: var(--color-text-muted);
+    max-width: 52rem;
+  }
+
+  .tour__dots {
+    position: absolute;
+    right: 0;
+    top: 0.2rem;
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .tour__dot {
+    width: 2.4rem;
+    height: 0.3rem;
+    border-radius: 999px;
+    background: var(--color-line);
+    transition: background-color 0.4s var(--ease-out);
+  }
+
+  .tour__dot.is-active {
+    background: var(--color-accent);
+  }
+
+  /* 004 Made in India */
+  .pan__track {
+    height: 260vh;
+  }
+
+  :global(html.motion-reduced) .pan__track {
+    height: auto;
+  }
+
+  .pan__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    padding: calc(var(--nav-h) + 2.4rem) var(--gutter) 2.4rem;
+  }
+
+  :global(html.motion-reduced) .pan__sticky {
+    position: relative;
+  }
+
+  .pan__frame {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #e9ecef;
+  }
+
+  /* Taller than the frame so it is wider than the viewport on every screen: that width is the pan. */
+  .pan__strip {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    height: 120%;
+    aspect-ratio: 2000 / 1116;
+    will-change: transform;
+  }
+
+  :global(html.motion-reduced) .pan__strip {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .pan :global(.pan__img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pan__card {
+    position: absolute;
+    left: 1.6rem;
+    right: 1.6rem;
+    bottom: 1.6rem;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.4rem;
+    padding: 3rem;
+    border-radius: calc(var(--radius) - 4px);
+    background: var(--color-white);
+    box-shadow: 0 1.2rem 4rem rgba(16, 24, 40, 0.14);
+  }
+
+  @media (min-width: 900px) {
+    .pan__card {
+      left: 2.4rem;
+      right: auto;
+      bottom: 2.4rem;
+      width: 52rem;
+      padding: 4rem;
+    }
+  }
+
+  .pan__text {
+    color: var(--color-text-muted);
+    max-width: 44rem;
+  }
+
+  .pan .renderTag {
+    top: 1.2rem;
+    bottom: auto;
+  }
+
+  /* 005 Safe by gravity */
+  .expand__track {
+    height: 300vh;
+  }
+
+  .expand__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .expand__frame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #0b1014;
+  }
+
+  :global(html.js:not(.motion-reduced)) .expand__frame {
+    clip-path: inset(17svh 24vw round 2rem);
+    will-change: clip-path;
+  }
+
+  .expand :global(.expand__img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :global(html.js:not(.motion-reduced)) .expand :global(.expand__img) {
+    transform: scale(1.32);
+    will-change: transform;
+  }
+
+  .expand__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(2, 5, 8, 0.86) 0%, rgba(2, 5, 8, 0.45) 50%, rgba(2, 5, 8, 0.15) 100%);
+  }
+
+  .expand .renderTag {
+    top: calc(var(--nav-h) + 2.4rem);
+    bottom: auto;
+  }
+
+  .expand__overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6rem;
+    display: grid;
+    gap: 3rem;
+    color: var(--color-white);
+  }
+
+  @media (min-width: 900px) {
+    .expand__overlay {
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: 1.6rem;
+      align-items: end;
+      bottom: 8rem;
+    }
+    .expand__title {
+      grid-column: 1 / span 5;
+    }
+    .expand__copy {
+      grid-column: 7 / span 6;
+    }
+  }
+
+  .expand__title .line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
+    color: var(--color-white);
+  }
+
+  .expand__title .line:nth-child(2) {
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .expand__title .line > span {
+    display: inline-block;
+    color: inherit;
+  }
+
+  :global(html.js:not(.motion-reduced)) .expand__title .line > span {
+    transform: translate3d(0, 110%, 0);
+  }
+
+  /* A dark panel keeps the copy legible over the bright pools wherever it lands. */
+  .expand__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.4rem;
+    padding: 2.4rem;
+    border-radius: calc(var(--radius) - 4px);
+    background: rgba(4, 8, 12, 0.74);
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  @media (min-width: 900px) {
+    .expand__copy {
+      padding: 3.2rem;
+    }
+  }
+
+  :global(html.js) .expand__copy {
+    opacity: 0;
+  }
+
+  :global(html.motion-reduced) .expand__track {
+    height: auto;
+  }
+
+  :global(html.motion-reduced) .expand__sticky {
+    position: relative;
+  }
+
+  :global(html.motion-reduced) .expand__copy {
+    opacity: 1;
+  }
+
+  /* On phones the panel would cover the photo: keep the paragraph, leave the figures to /qark-one. */
+  @media (max-width: 599px) {
+    .expand__copy .textH4 {
+      font-size: 1.4rem;
+    }
+    .expand__copy .facts {
+      display: none;
+    }
+  }
+
+  /* 006 The reactor */
+  .vessel {
+    /* Darker than the site-wide muted grey so small text keeps 4.5:1 on this pale grey ground. */
+    --color-text-muted: #5c5c61;
+    padding: 16rem 0;
+    background: #ececec;
+  }
+
+  .vessel__grid {
+    row-gap: 6rem;
+    align-items: center;
+  }
+
+  .vessel__text {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+
+  .vessel__text .textH4 {
+    color: var(--color-text-muted);
+    max-width: 48rem;
+  }
+
+  .vessel__text .facts {
+    width: 100%;
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .vessel__text .facts__row {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .vessel__plate {
+    grid-column: 1 / -1;
+    aspect-ratio: 2000 / 1116;
+  }
+
+  @media (min-width: 900px) {
+    .vessel__text {
+      grid-column: 1 / span 4;
+    }
+    .vessel__plate {
+      grid-column: 6 / span 7;
+    }
+  }
+
+  /* Fades in once the reveal zoom has settled, so the glow never drifts off the core. */
+  .vessel__glowWrap {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  :global(html.js) .vessel__glowWrap {
+    opacity: 0;
+    transition: opacity 1.2s var(--ease-out) 1.6s;
+  }
+
+  :global(html.js) .vessel__plate:global(.is-visible) .vessel__glowWrap {
+    opacity: 1;
+  }
+
+  /* The core's light, layered over the render at the core's position and breathing slowly. */
+  .vessel__glow {
+    position: absolute;
+    left: 50%;
+    top: 79%;
+    width: 22%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 190, 140, 0.55) 0%,
+      rgba(150, 140, 255, 0.35) 38%,
+      rgba(110, 130, 255, 0) 70%
+    );
+    mix-blend-mode: screen;
+    transform: translate(-50%, -50%);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  :global(html:not(.motion-reduced)) .vessel__glow {
+    animation: coreBreath 3.6s var(--ease-in-out) infinite alternate;
+  }
+
+  @keyframes coreBreath {
+    from {
+      opacity: 0.45;
+      transform: translate(-50%, -50%) scale(0.92);
+    }
+    to {
+      opacity: 0.95;
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+  }
+
+  /* 007 The design */
+  .design {
+    background: var(--color-navy);
+    padding-bottom: 14rem;
+  }
+
+  .design__title .line:nth-child(2) {
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .design .chapterHead__intro {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .design__sheet {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius);
+    aspect-ratio: 2000 / 1250;
+    background: var(--color-navy);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .design :global(.design__img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Draw-in: the sheet unclips from the top while a scan line leads the edge. */
+  :global(html.js:not(.motion-reduced)) .design :global(.design__img) {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 2.4s var(--ease-in-out);
+  }
+
+  :global(html.js:not(.motion-reduced)) .design__sheet.is-in :global(.design__img) {
+    clip-path: inset(0 0 0 0);
+  }
+
+  .design__scan {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .design__scan::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(140, 200, 255, 0.95) 20%, rgba(140, 200, 255, 0.95) 80%, transparent);
+    box-shadow: 0 0 2.4rem 0.4rem rgba(120, 180, 255, 0.45);
+  }
+
+  :global(html.js:not(.motion-reduced)) .design__sheet.is-in .design__scan {
+    animation: scan 2.4s var(--ease-in-out) forwards;
+  }
+
+  @keyframes scan {
+    0% {
+      opacity: 1;
       transform: translateY(0);
     }
-    50% {
-      transform: translateY(0.4rem);
+    92% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(100%);
     }
   }
 
-  /* Section footer rule */
-  .sectionFooter {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  :global(html.motion-reduced) .design__sheet {
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+
+  :global(html.motion-reduced) .design__sheet.is-in {
+    opacity: 1;
+  }
+
+  .design__data {
+    row-gap: 4rem;
     margin-top: 8rem;
-    padding-top: 1.6rem;
-    border-top: 1px solid var(--color-line);
   }
 
-  /* Intro */
-  .intro__lead {
-    grid-column: 1 / -1;
-  }
-
-  .intro__side {
+  .design__dataHead {
     grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 2.4rem;
-    margin-top: 4rem;
+    gap: 2rem;
   }
 
-  @media (min-width: 900px) {
-    .intro__lead {
-      grid-column: 1 / span 8;
-    }
-    .intro__side {
-      grid-column: 1 / span 6;
-      margin-top: 8rem;
-    }
+  .design__note {
+    max-width: 36rem;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 1.2rem;
   }
 
-  /* Feature */
-  .feature__grid {
-    row-gap: 4rem;
-  }
-
-  .feature__media {
+  .design .facts {
     grid-column: 1 / -1;
   }
 
-  .feature__art {
-    aspect-ratio: 4 / 5;
+  @media (min-width: 900px) {
+    .design__dataHead {
+      grid-column: 1 / span 4;
+    }
+    .design .facts {
+      grid-column: 6 / span 7;
+    }
+  }
+
+  /* 008 Thorium */
+  .thorium {
+    padding-bottom: 14rem;
+  }
+
+  .thorium__body {
+    row-gap: 6rem;
+    align-items: start;
+  }
+
+  .thorium__body :global(.thorium__photo) {
+    grid-column: 1 / -1;
+    aspect-ratio: 4 / 3;
+  }
+
+  .thorium__stages {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4rem;
+  }
+
+  @media (min-width: 900px) {
+    .thorium__body :global(.thorium__photo) {
+      grid-column: 1 / span 5;
+      aspect-ratio: 4 / 5;
+    }
+    .thorium__stages {
+      grid-column: 7 / span 6;
+      padding-top: 1rem;
+    }
+  }
+
+  .stages {
+    position: relative;
+    display: grid;
+    gap: 3.6rem;
+    padding-left: 3.2rem;
+    width: 100%;
+  }
+
+  /* The line the three stages hang from; it draws down when the list comes into view. */
+  .stages::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 1px;
+    background: var(--color-line);
+    transform-origin: top;
+  }
+
+  .stages__item {
+    position: relative;
+  }
+
+  .stages__item::before {
+    content: '';
+    position: absolute;
+    left: -3.2rem;
+    top: 0.3rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: var(--color-white);
+    border: 1px solid var(--color-grey-on-white);
+  }
+
+  .stages__item:last-child::before {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .stages__label {
+    color: var(--color-text-muted);
+    margin-bottom: 0.8rem;
+  }
+
+  .stages__title {
+    font-size: 2.2rem;
+    font-weight: 500;
+    letter-spacing: -0.02rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .stages__text {
+    color: var(--color-text-muted);
+    max-width: 48rem;
+  }
+
+  :global(html.js) .stages::before {
+    transform: scaleY(0);
+    transition: transform 1.4s var(--ease-out);
+  }
+
+  :global(html.js) .stages__item {
+    opacity: 0;
+    transform: translate3d(0, 1.2rem, 0);
+    transition:
+      opacity 0.9s var(--ease-out),
+      transform 1s var(--ease-out);
+    transition-delay: calc(200ms + var(--i) * 160ms);
+  }
+
+  :global(html.js) .stages.is-in::before {
+    transform: none;
+  }
+
+  :global(html.js) .stages.is-in .stages__item {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(html.motion-reduced) .stages::before,
+  :global(html.motion-reduced) .stages__item {
+    transform: none;
+  }
+
+  .thorium__qark {
+    max-width: 52rem;
+    padding: 2.4rem 2.8rem;
+    border-radius: calc(var(--radius) - 4px);
+    background: var(--color-surface);
+    font-size: 1.7rem;
+    line-height: 1.35;
+  }
+
+  .thorium__qark strong {
+    font-weight: 500;
+    color: var(--color-accent-deep);
+  }
+
+  /* 009 Work with us */
+  .doors {
+    padding: 4rem 0 16rem;
+  }
+
+  .doors__list {
+    margin-top: 8rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .door {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'who arrow'
+      'title arrow'
+      'text arrow';
+    column-gap: 2rem;
+    row-gap: 0.8rem;
+    padding: 3.2rem 0;
+    border-bottom: 1px solid var(--color-line);
+    transition: transform 0.16s var(--ease-out);
+  }
+
+  .door:active {
+    transform: scale(0.995);
+  }
+
+  @media (min-width: 900px) {
+    .door {
+      grid-template-columns: 3fr 5fr 4fr auto;
+      grid-template-areas: 'who title text arrow';
+      align-items: center;
+      padding: 4rem 0;
+    }
+  }
+
+  .door__who {
+    grid-area: who;
+    color: var(--color-text-muted);
+  }
+
+  .door__title {
+    grid-area: title;
+    font-size: 2.6rem;
+    letter-spacing: -0.04rem;
+    line-height: 1.05;
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  @media (min-width: 900px) {
+    .door__title {
+      font-size: 3.6rem;
+    }
+  }
+
+  .door__text {
+    grid-area: text;
+    color: var(--color-text-muted);
+    max-width: 40rem;
+  }
+
+  .door__arrow {
+    grid-area: arrow;
+    align-self: center;
     display: grid;
     place-items: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-line);
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
   }
 
-  .feature__diagram {
-    position: relative;
-    z-index: 1;
-    width: 60%;
-    height: auto;
-    fill: none;
+  .door__arrow svg {
+    width: 1.4rem;
+    height: 1.4rem;
+    transition: transform 0.4s var(--ease-out);
   }
 
-  .feature__diagram--chart {
-    width: 90%;
-  }
-
-  .feature__text {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2.4rem;
-  }
-
-  .feature__number {
-    margin-bottom: 1rem;
-  }
-
-  @media (min-width: 900px) {
-    .feature__media {
-      grid-column: 1 / span 6;
+  @media (hover: hover) and (pointer: fine) {
+    .door:hover .door__title {
+      transform: translateX(0.8rem);
     }
-    .feature__text {
-      grid-column: 8 / span 5;
-      justify-content: center;
+    .door:hover .door__arrow {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-white);
     }
-    .feature--flip .feature__text {
-      grid-column: 1 / span 5;
-      grid-row: 1;
-    }
-    .feature--flip .feature__media {
-      grid-column: 7 / span 6;
-      grid-row: 1;
-    }
-    .feature--flip .feature__art {
-      aspect-ratio: 5 / 4;
-    }
-  }
-
-  /* Advantage */
-  .advantage {
-    padding-top: 4rem;
-  }
-
-  .advantage__head {
-    grid-column: 1 / -1;
-  }
-
-  .advantage__intro {
-    grid-column: 1 / -1;
-    margin-top: 3rem;
-  }
-
-  @media (min-width: 900px) {
-    .advantage__head {
-      grid-column: 1 / span 6;
-    }
-    .advantage__intro {
-      grid-column: 8 / span 5;
-      margin-top: 0;
-      align-self: end;
-    }
-  }
-
-  .advantage__stats {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0 1.6rem;
-    margin-top: 6rem;
-  }
-
-  @media (min-width: 600px) {
-    .advantage__stats {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 900px) {
-    .advantage__stats {
-      grid-template-columns: repeat(3, 1fr);
-      margin-top: 8rem;
-    }
-  }
-
-  .advantage__cta {
-    margin-top: 2rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--color-line);
-  }
-
-  /* CTAs */
-  .ctas {
-    padding-top: 0;
-    padding-bottom: 2rem;
-  }
-
-  .ctas__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.6rem;
-  }
-
-  @media (min-width: 900px) {
-    .ctas__grid {
-      grid-template-columns: 1fr 1fr;
+    .door:hover .door__arrow svg {
+      transform: translate(0.15rem, -0.15rem);
     }
   }
 </style>

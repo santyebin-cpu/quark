@@ -1,0 +1,53 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  class?: string;
+  /** Rendered width hint for the browser's srcset choice. */
+  sizes?: string;
+  eager?: boolean;
+  /** Show the "Concept render" tag (renders are illustrations, not photographs of hardware). */
+  tag?: boolean;
+  /** Tag style for dark images. */
+  dark?: boolean;
+  reveal?: boolean;
+  parallax?: boolean;
+}
+
+const {
+  src,
+  alt,
+  class: className = '',
+  sizes = '100vw',
+  eager = false,
+  tag = true,
+  dark = false,
+  reveal = true,
+  parallax = true,
+} = Astro.props;
+
+const widths = [640, 960, 1280, 1600, 2000].filter((w) => w <= src.width);
+---
+
+<figure
+  class:list={['photo', className, { 'photo--reveal': reveal }]}
+  data-reveal-media={reveal ? '' : undefined}
+  data-parallax={parallax ? '' : undefined}
+>
+  <div class="photo__inner">
+    <Picture
+      src={src}
+      widths={widths}
+      formats={['avif', 'webp']}
+      sizes={sizes}
+      alt={alt}
+      loading={eager ? 'eager' : 'lazy'}
+    />
+    <slot name="overlay" />
+  </div>
+  {tag && <figcaption class:list={['renderTag', { 'renderTag--dark': dark }]}>Concept render</figcaption>}
+  <slot />
+</figure>

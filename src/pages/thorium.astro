@@ -1,0 +1,286 @@
+---
+import { withBase } from '../lib/paths';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionNumber from '../components/SectionNumber.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/media';
+import { threeStages } from '../data/qark-one';
+
+const roadmap = [
+  {
+    when: 'Now',
+    title: 'Concept design',
+    body: 'General arrangement QE-GA-001 (rev A) sets out the reactor block, the core lattice and the principal data for Qark One.',
+  },
+  {
+    when: 'Next',
+    title: 'Basic design and safety analysis',
+    body: 'Fuel, core physics, thermal-hydraulics and the passive safety systems are worked up in detail and checked against India’s safety codes.',
+  },
+  {
+    when: 'Then',
+    title: 'Regulatory engagement',
+    body: 'We plan to engage India’s Atomic Energy Regulatory Board early, well before applying to build a first unit.',
+  },
+  {
+    when: 'Then',
+    title: 'The first plant',
+    body: 'Site selection, construction and commissioning of the first Qark One. No site has been announced yet.',
+  },
+];
+---
+
+<Layout
+  title="Thorium"
+  description="Why thorium matters for India, how India's three-stage nuclear programme leads to it, and how Qark One is designed to put it to work now."
+>
+  <PageHero
+    eyebrow="Thorium"
+    title="India’s own<br />nuclear fuel"
+    intro="Thorium is about three times as abundant as uranium in the Earth’s crust, and India holds one of the largest reserves in the world. Qark One is designed to start using it now."
+  />
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="th__hero art art--photo reveal">
+        <Photo photo={photos.coast} fill reveal={false} sizes="100vw" eager />
+        <div class="th__heroLabel onDark">
+          <p class="textH3">Monazite sands along India’s coast hold much of its thorium.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={2} />
+          <h2 class="textH3 reveal">Why thorium</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            Thorium-232 cannot sustain a chain reaction on its own. When it absorbs a neutron it becomes, after a short
+            decay chain, uranium-233, which can. A reactor fuelled with thorium therefore breeds much of its own fuel
+            as it runs.
+          </p>
+          <p>
+            Thorium dioxide melts at a higher temperature than uranium dioxide and conducts heat better, and a thorium
+            fuel cycle produces far less plutonium and other long-lived heavy elements than a uranium one.
+          </p>
+          <p>
+            And India has plenty of it. Thorium is one of the few energy resources the country holds in abundance,
+            which is why its nuclear programme has pointed towards it for seventy years.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={3} />
+          <h2 class="textH3 reveal">India’s three-stage programme</h2>
+        </div>
+        <div class="th__stagesWrap">
+          <p class="th__lead reveal">
+            Since the 1950s, India’s nuclear programme has planned a path in three stages, each making the fuel for the
+            next and ending with thorium.
+          </p>
+          <ol class="th__stages">
+            {
+              threeStages.map((s, i) => (
+                <li class="reveal" style={`--delay:${i * 100}ms`}>
+                  <p class="textSmall th__stageLabel">{s.stage}</p>
+                  <h3 class="textH4 th__stageTitle">{s.title}</h3>
+                  <p class="th__stageText">{s.text}</p>
+                </li>
+              ))
+            }
+          </ol>
+          <p class="th__fit reveal">
+            <strong>Where Qark One fits:</strong> it is designed to put thorium to work now, using high-assay
+            low-enriched uranium as the driver fuel, rather than waiting for the third stage.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section onDark darkBlock" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={4} />
+          <h2 class="textH3 reveal">Qark One’s fuel</h2>
+        </div>
+        <div class="prose reveal">
+          <p class="textH4">
+            (Th–HALEU)O₂: thorium dioxide mixed with uranium dioxide enriched to between 5 and 20 percent uranium-235.
+          </p>
+          <p>
+            The uranium drives the chain reaction from the first day, while the thorium breeds uranium-233 that is
+            burned where it forms. Each fuel cluster holds 54 pins in three rings of 12, 18 and 24 around a central
+            water tube, and clusters are changed from the top while the reactor runs.
+          </p>
+          <div class="pageHero__actions">
+            <a class="btnMain" href={withBase('/qark-one#data')}>
+              Qark One principal data
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={5} />
+          <h2 class="textH3 reveal">Where we are</h2>
+        </div>
+      </div>
+      <ol class="timeline">
+        {
+          roadmap.map((t) => (
+            <li class="timeline__item reveal">
+              <div class="timeline__left">
+                <p class="textSmall timeline__when">{t.when}</p>
+              </div>
+              <div class="timeline__right">
+                <h3 class="textH3">{t.title}</h3>
+                <p>{t.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="pageHero__actions th__actions">
+        <a class="btnMain btnMain--solid" href={withBase('/contact?topic=partners')}>
+          Work with us on thorium
+          <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+        </a>
+        <a class="btnMain" href={withBase('/news')}>
+          Follow our progress
+          <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .th__hero {
+    aspect-ratio: 16 / 7;
+    min-height: 32rem;
+    display: flex;
+    align-items: flex-end;
+    padding: 3rem;
+  }
+
+  .th__heroLabel {
+    max-width: 56rem;
+    background: transparent;
+  }
+
+  .th__stagesWrap {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  @media (min-width: 900px) {
+    .th__stagesWrap {
+      grid-column: 4 / span 9;
+    }
+  }
+
+  .th__lead {
+    max-width: 60rem;
+  }
+
+  .th__stages {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 1.6rem;
+  }
+
+  @media (min-width: 900px) {
+    .th__stages {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .th__stages li {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem 0 2.8rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .th__stages li:last-child {
+    border-top-color: var(--color-accent);
+  }
+
+  .th__stageLabel,
+  .th__stageText {
+    color: var(--color-text-muted);
+  }
+
+  .th__fit {
+    max-width: 60rem;
+    padding: 2.4rem 2.8rem;
+    border-radius: calc(var(--radius) - 4px);
+    background: var(--color-surface);
+  }
+
+  .th__fit strong {
+    font-weight: 500;
+    color: var(--color-accent-deep);
+  }
+
+  .timeline {
+    margin-top: 4rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .timeline__item {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  @media (min-width: 900px) {
+    .timeline__item {
+      grid-template-columns: 3fr 1fr 7fr 1fr;
+      gap: 0 1.6rem;
+      padding: 5rem 0;
+    }
+    .timeline__right {
+      grid-column: 3;
+    }
+  }
+
+  .timeline__when {
+    color: var(--color-text-muted);
+  }
+
+  .timeline__right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .th__actions {
+    margin-top: 5rem;
+  }
+</style>

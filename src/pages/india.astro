@@ -1,0 +1,262 @@
+---
+import { withBase } from '../lib/paths';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionNumber from '../components/SectionNumber.astro';
+import Photo from '../components/Photo.astro';
+import Render from '../components/Render.astro';
+import { photos } from '../data/media';
+import factoryHall from '../assets/plant/factory-hall.jpg';
+
+const sites = [
+  {
+    title: 'Retiring thermal power stations',
+    text: 'Coal stations already have grid connections, cooling water, rail access and skilled people. A Qark One unit is sized to reuse them.',
+  },
+  {
+    title: 'Industrial clusters',
+    text: 'Plants that need both electricity and steam can take both from one reactor, around the clock.',
+  },
+  {
+    title: 'Coastal sites',
+    text: 'Near the sea, part of the steam can drive desalination for water-stressed cities and industry.',
+  },
+];
+
+const supply = [
+  'Heavy forgings and vessels',
+  'Pressure tubes and calandria components',
+  'Steam drums, piping and valves',
+  'Fuel handling and refuelling equipment',
+  'Instrumentation and control',
+  'Civil construction and cranes',
+];
+---
+
+<Layout
+  title="India"
+  description="Why India needs more firm, carbon-free power, where Qark One fits, and how it is designed to be built with Indian industry."
+>
+  <PageHero
+    eyebrow="India"
+    title="Built for India"
+    intro="India’s demand for electricity keeps climbing, and its goal of 100 GW of nuclear power by 2047 needs reactors that can be built quickly and sited widely. Qark One is designed for that job."
+  />
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="in__hero art art--photo reveal">
+        <Photo photo={photos.cityDusk} fill reveal={false} sizes="100vw" eager />
+        <div class="in__heroLabel onDark">
+          <p class="textH3">India has set out to build 100 GW of nuclear power by 2047.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={2} />
+          <h2 class="textH3 reveal">More power, around the clock</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            India is adding solar and wind at a record pace, with a goal of 500 GW of non-fossil capacity by
+            2030. Sun and wind still come and go, and the grid also needs power that runs day and night,
+            in every season.
+          </p>
+          <p>
+            Nuclear power provides that firm supply without burning fuel. India has set out to expand it to 100 GW by
+            2047, roughly ten times what it runs today, and small modular reactors are part of how it plans to get
+            there.
+          </p>
+        </div>
+      </div>
+      <Photo photo={photos.gridSunset} class="in__grid" sizes="100vw" />
+    </div>
+  </section>
+
+  <section class="section onDark darkBlock" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={3} />
+          <h2 class="textH3 reveal">Where Qark One fits</h2>
+        </div>
+        <ul class="in__sites">
+          {
+            sites.map((s, i) => (
+              <li class="reveal" style={`--delay:${i * 90}ms`}>
+                <h3 class="textH4">{s.title}</h3>
+                <p class="in__siteText">{s.text}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={4} />
+          <h2 class="textH3 reveal">Made in India</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            Qark One is designed around components that Indian industry can make in its own workshops. India’s
+            heavy-engineering firms have built reactor components for decades, and a plant that draws on them keeps
+            jobs, skills and spending in the country.
+          </p>
+        </div>
+      </div>
+      <div class="grid in__made">
+        <Render
+          src={factoryHall}
+          alt="Concept render of a factory hall where large reactor components are fabricated"
+          class="in__factory"
+          sizes="(min-width: 900px) 60vw, 100vw"
+        />
+        <div class="in__supply">
+          <p class="textSmall in__supplyHead">What Indian industry would build</p>
+          <ul>
+            {supply.map((s) => <li>{s}</li>)}
+          </ul>
+          <a class="learnMore" href={withBase('/suppliers')}>
+            <span>Become<br />a supplier</span>
+            <i class="learnMore__dot"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={5} />
+          <h2 class="textH3 reveal">Our first plant</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            We have not announced a site. When we do, this page will carry the project’s details, its timeline and how
+            to reach the project team.
+          </p>
+          <p>
+            If you represent a state government, a utility or an industrial park that could host Qark One, we would
+            like to hear from you.
+          </p>
+          <div class="pageHero__actions">
+            <a class="btnMain btnMain--solid" href={withBase('/contact?topic=partners')}>
+              Talk to us about a site
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+            </a>
+            <a class="btnMain" href={withBase('/careers')}>
+              Jobs at Qark Energy
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .in__hero {
+    aspect-ratio: 16 / 7;
+    min-height: 32rem;
+    display: flex;
+    align-items: flex-end;
+    padding: 3rem;
+  }
+
+  .in__heroLabel {
+    max-width: 56rem;
+    background: transparent;
+  }
+
+  .maxWidth :global(.in__grid) {
+    margin-top: 6rem;
+    aspect-ratio: 4 / 3;
+  }
+
+  @media (min-width: 900px) {
+    .maxWidth :global(.in__grid) {
+      aspect-ratio: 21 / 8;
+    }
+  }
+
+  .in__sites {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 1.6rem;
+  }
+
+  @media (min-width: 900px) {
+    .in__sites {
+      grid-column: 4 / span 9;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .in__sites li {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2.4rem 0 3.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .in__siteText {
+    color: var(--color-grey-on-black);
+  }
+
+  .in__made {
+    row-gap: 4rem;
+    margin-top: 6rem;
+    align-items: start;
+  }
+
+  .in__made :global(.in__factory) {
+    grid-column: 1 / -1;
+    aspect-ratio: 2000 / 1116;
+  }
+
+  .in__supply {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.4rem;
+  }
+
+  @media (min-width: 900px) {
+    .in__made :global(.in__factory) {
+      grid-column: 1 / span 8;
+    }
+    .in__supply {
+      grid-column: 10 / span 3;
+    }
+  }
+
+  .in__supplyHead {
+    color: var(--color-text-muted);
+  }
+
+  .in__supply ul {
+    width: 100%;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .in__supply li {
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+</style>

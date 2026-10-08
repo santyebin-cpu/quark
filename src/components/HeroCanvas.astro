@@ -1,158 +1,395 @@
 ---
 /**
- * Lightweight canvas stand-in for a WebGL hero: a field of "quarks" bound in
- * drifting triplets, drawn over a slow radial glow. No dependencies.
+ * WebGL hero: the Qark One core lattice from drawing QE-GA-001, section B-B.
+ * 513 lattice positions on a square pitch, 452 fuel channels drawn as
+ * hairlines of light and 61 reactivity devices in violet. Brightness follows a
+ * reactor-like flux shape (highest at the centre and mid-height) with a slow
+ * radial wave, and a scatter of sparkle points gives the light some texture.
+ * Raw WebGL, no dependencies.
+ *
+ * Scroll progress is read from the closest [data-hero-scope] ancestor (or the
+ * parent element): the camera lifts from an oblique view to the drawing's plan
+ * view while the lattice dims behind the page copy. Without WebGL the CSS glow
+ * underneath remains as a static fallback.
  */
 ---
 
-<canvas class="heroCanvas" data-hero-canvas aria-hidden="true"></canvas>
+<div class="heroCanvas" data-hero-canvas aria-hidden="true">
+  <canvas></canvas>
+</div>
 
 <style>
   .heroCanvas {
     position: absolute;
     inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background: #000;
+  }
+
+  /* Soft bloom behind the core; follows it on every layout. */
+  .heroCanvas::before {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    background: radial-gradient(
+      circle at var(--cx, 66%) var(--cy, 48%),
+      rgba(104, 112, 255, 0.26) 0%,
+      rgba(116, 90, 219, 0.1) 15%,
+      rgba(116, 90, 219, 0.03) 28%,
+      rgba(116, 90, 219, 0) 40%
+    );
+    opacity: calc(1 - var(--hp, 0) * 0.55);
+  }
+
+  /* Film grain keeps the black from looking flat. */
+  .heroCanvas::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+  }
+
+  canvas {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     display: block;
+    opacity: 0;
+    transition: opacity 1.4s var(--ease-out);
+  }
+
+  .heroCanvas.is-live canvas {
+    opacity: 1;
   }
 </style>
 
 <script>
-  const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const VERT = /* glsl */ `
+    attribute vec4 aData;   // channels: x, z, position along the channel (0-1), random; rings: x, z, ring index, random
+    attribute float aKind;  // 0 fuel channel, 1 reactivity device, 2 vessel ring
+    uniform float uTime;
+    uniform float uIntro;
+    uniform float uScroll;
+    uniform float uMotion;  // 1 normally, 0 with reduced motion (no camera movement)
+    uniform mediump float uLines;  // 1 while drawing the channel hairlines, 0 for points (precision matches the fragment shader)
+    uniform vec2 uRot;
+    uniform vec2 uCenter;
+    uniform float uScale;
+    uniform float uAspect;
+    uniform float uDpr;
+    varying float vAlpha;
+    varying vec3 vColor;
 
-  if (canvas) {
-    const ctx = canvas.getContext('2d')!;
-    let w = 0;
-    let h = 0;
-    let dpr = 1;
-    let t = 0;
-    let raf = 0;
-    let pointer = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
+    void main() {
+      vec2 xz = aData.xy;
+      float t = aData.z;
+      float r = aData.w;
+      float rad = length(xz) / 1.17;
+      float H = 1.4;
 
-    type Triplet = {
-      x: number;
-      y: number;
-      r: number;
-      spin: number;
-      phase: number;
-      drift: number;
-      size: number;
-      alpha: number;
+      // Intro: channels are lowered in from above, centre first, like top-entry fuelling.
+      float k = clamp((uIntro - rad * 0.4) / 0.6, 0.0, 1.0);
+      k = 1.0 - pow(1.0 - k, 3.0);
+
+      vec3 p;
+      float alpha;
+      vec3 col;
+      float size = 1.0;
+
+      if (aKind < 1.5) {
+        p = vec3(xz.x, (t - 0.5) * H + (1.0 - k) * H * 1.4, xz.y);
+        // Flux: highest at the centre and mid-height, with a slow radial wave.
+        float radial = cos(min(rad, 1.0) * 1.35);
+        float axial = cos((t - 0.5) * 2.6);
+        // The wave only reads as motion; a still (reduced-motion) frame shows steady flux instead of frozen bands.
+        float wave = mix(1.0, 0.88 + 0.12 * sin(uTime * 0.9 - rad * 7.0), uMotion);
+        float flux = radial * axial * wave;
+        if (aKind < 0.5) {
+          alpha = 0.1 + 0.8 * flux;
+          col = mix(vec3(0.35, 0.48, 1.0), vec3(0.92, 0.96, 1.0), smoothstep(0.25, 0.95, flux));
+        } else {
+          alpha = 0.5 + 0.3 * axial;
+          col = vec3(0.62, 0.5, 1.0);
+          size = 1.3;
+        }
+        alpha *= k * mix(1.0, 0.42, uLines);
+      } else {
+        // Vessel outline: rings at the top and bottom of the core.
+        p = vec3(xz.x, (t - 0.5) * (H + 0.12), xz.y);
+        alpha = 0.22 * uIntro;
+        col = vec3(0.75, 0.8, 1.0);
+        size = 0.8;
+      }
+
+      // Camera: a slow orbit; scrolling lifts it from an oblique view to the plan view of the drawing.
+      float lift = smoothstep(0.0, 1.0, uScroll) * uMotion;
+      float az = 0.6 + uTime * 0.04 * uMotion + uRot.x;
+      float el = mix(0.3, 1.5, lift) + uRot.y;
+      float ca = cos(az);
+      float sa = sin(az);
+      p = vec3(ca * p.x - sa * p.z, p.y, sa * p.x + ca * p.z);
+      float ce = cos(el);
+      float se = sin(el);
+      p = vec3(p.x, p.y * ce - p.z * se, p.y * se + p.z * ce);
+
+      float camDist = mix(5.2, 6.0, lift);
+      float z = camDist - p.z;
+      float persp = 3.2 / z;
+      vec2 clip = p.xy * persp * uScale;
+      clip.x /= uAspect;
+      gl_Position = vec4(clip + uCenter, 0.0, 1.0);
+
+      gl_PointSize = (1.4 + r * 1.4) * size * uDpr * (persp / 0.6);
+      float near = 1.0 - smoothstep(camDist - 1.5, camDist + 1.5, z);
+      vAlpha = alpha * (0.45 + 0.55 * near) * (1.0 - uScroll * 0.6);
+      vColor = col;
+    }
+  `;
+
+  const FRAG = /* glsl */ `
+    precision mediump float;
+    uniform mediump float uLines;
+    varying float vAlpha;
+    varying vec3 vColor;
+    void main() {
+      float a = vAlpha;
+      if (uLines < 0.5) {
+        float d = length(gl_PointCoord - 0.5);
+        if (d > 0.5) discard;
+        a *= 1.0 - smoothstep(0.12, 0.5, d);
+      }
+      gl_FragColor = vec4(vColor * a, a);
+    }
+  `;
+
+  function compile(gl: WebGLRenderingContext, type: number, src: string) {
+    const shader = gl.createShader(type)!;
+    gl.shaderSource(shader, src);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.warn('[hero] shader:', gl.getShaderInfoLog(shader));
+      return null;
+    }
+    return shader;
+  }
+
+  // 513 lattice positions (a circle of radius 12.75 pitches plus the four axis tips): every third
+  // position in both directions is one of the 61 reactivity devices, leaving 452 fuel channels.
+  function latticeCells() {
+    const pitch = 0.09;
+    const cells: { x: number; z: number; kind: number }[] = [];
+    for (let i = -13; i <= 13; i++) {
+      for (let j = -13; j <= 13; j++) {
+        const inCircle = i * i + j * j <= 12.75 * 12.75;
+        const tip = (Math.abs(i) === 13 && j === 0) || (Math.abs(j) === 13 && i === 0);
+        if (inCircle || tip) cells.push({ x: i * pitch, z: j * pitch, kind: i % 3 === 0 && j % 3 === 0 ? 1 : 0 });
+      }
+    }
+    return cells;
+  }
+
+  type Geometry = { data: Float32Array; kind: Float32Array; count: number };
+
+  // Each channel is a hairline split into segments, so brightness can follow the axial flux shape.
+  function buildLines(cells: ReturnType<typeof latticeCells>, segments: number): Geometry {
+    const count = cells.length * segments * 2;
+    const data = new Float32Array(count * 4);
+    const kind = new Float32Array(count);
+    let k = 0;
+    for (const c of cells) {
+      const r = Math.random();
+      for (let s = 0; s < segments; s++) {
+        for (const t of [s / segments, (s + 1) / segments]) {
+          data.set([c.x, c.z, t, r], k * 4);
+          kind[k++] = c.kind;
+        }
+      }
+    }
+    return { data, kind, count };
+  }
+
+  // Sparkles scattered along the channels, plus the two vessel rings.
+  function buildPoints(cells: ReturnType<typeof latticeCells>, perChannel: number): Geometry {
+    const ringPoints = 180;
+    const count = cells.length * perChannel + ringPoints * 2;
+    const data = new Float32Array(count * 4);
+    const kind = new Float32Array(count);
+    let k = 0;
+    for (const c of cells) {
+      for (let s = 0; s < perChannel; s++) {
+        data.set([c.x, c.z, (s + Math.random()) / perChannel, Math.random()], k * 4);
+        kind[k++] = c.kind;
+      }
+    }
+    for (let ring = 0; ring < 2; ring++) {
+      for (let s = 0; s < ringPoints; s++) {
+        const a = (s / ringPoints) * Math.PI * 2;
+        data.set([Math.cos(a) * 1.24, Math.sin(a) * 1.24, ring, Math.random()], k * 4);
+        kind[k++] = 2;
+      }
+    }
+    return { data, kind, count };
+  }
+
+  function initHero(stage: HTMLElement) {
+    const canvas = stage.querySelector('canvas')!;
+    const scope = stage.closest<HTMLElement>('[data-hero-scope]') ?? stage.parentElement!;
+    // Reduced motion: a still frame that fades in and dims on scroll; no camera movement.
+    const reduced = document.documentElement.classList.contains('motion-reduced');
+    const gl = canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true });
+    if (!gl) return;
+
+    const vs = compile(gl, gl.VERTEX_SHADER, VERT);
+    const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
+    if (!vs || !fs) return;
+    const program = gl.createProgram()!;
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.warn('[hero] link:', gl.getProgramInfoLog(program));
+      return;
+    }
+    gl.useProgram(program);
+
+    const cells = latticeCells();
+    const small = window.innerWidth < 700;
+    const upload = (geo: Geometry) => {
+      const dataBuf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, dataBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, geo.data, gl.STATIC_DRAW);
+      const kindBuf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, kindBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, geo.kind, gl.STATIC_DRAW);
+      return { dataBuf, kindBuf, count: geo.count };
+    };
+    const lines = upload(buildLines(cells, small ? 8 : 12));
+    const points = upload(buildPoints(cells, small ? 4 : 7));
+
+    const locData = gl.getAttribLocation(program, 'aData');
+    const locKind = gl.getAttribLocation(program, 'aKind');
+    gl.enableVertexAttribArray(locData);
+    gl.enableVertexAttribArray(locKind);
+    const bind = (geo: ReturnType<typeof upload>) => {
+      gl.bindBuffer(gl.ARRAY_BUFFER, geo.dataBuf);
+      gl.vertexAttribPointer(locData, 4, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, geo.kindBuf);
+      gl.vertexAttribPointer(locKind, 1, gl.FLOAT, false, 0, 0);
     };
 
-    let triplets: Triplet[] = [];
+    const u = (name: string) => gl.getUniformLocation(program, name);
+    const uTime = u('uTime');
+    const uIntro = u('uIntro');
+    const uScroll = u('uScroll');
+    const uMotion = u('uMotion');
+    const uLines = u('uLines');
+    const uRot = u('uRot');
+    const uCenter = u('uCenter');
+    const uScale = u('uScale');
+    const uAspect = u('uAspect');
+    const uDpr = u('uDpr');
+
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE);
+    gl.clearColor(0, 0, 0, 0);
+    gl.uniform1f(uMotion, reduced ? 0 : 1);
 
     function resize() {
-      const rect = canvas!.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = rect.width;
-      h = rect.height;
-      canvas!.width = Math.floor(w * dpr);
-      canvas!.height = Math.floor(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      seed();
+      const w = canvas.clientWidth || 1;
+      const h = canvas.clientHeight || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      gl!.viewport(0, 0, canvas.width, canvas.height);
+      const aspect = w / h;
+      // Landscape: the core sits right of centre, clear of the title. Portrait: centred, scaled to width.
+      const center = aspect >= 1 ? [0.3, 0.06] : [0, 0.2];
+      const scale = aspect >= 1 ? 1.02 : aspect * 1.15;
+      gl!.uniform2f(uCenter, center[0], center[1]);
+      gl!.uniform1f(uScale, scale);
+      gl!.uniform1f(uAspect, aspect);
+      gl!.uniform1f(uDpr, dpr);
+      stage.style.setProperty('--cx', `${((center[0] + 1) / 2) * 100}%`);
+      stage.style.setProperty('--cy', `${((1 - center[1]) / 2) * 100}%`);
     }
 
-    function seed() {
-      const count = Math.round(Math.min(26, Math.max(10, (w * h) / 60000)));
-      triplets = Array.from({ length: count }, (_, i) => ({
-        x: Math.random(),
-        y: Math.random(),
-        r: 14 + Math.random() * 34,
-        spin: (Math.random() > 0.5 ? 1 : -1) * (0.2 + Math.random() * 0.5),
-        phase: Math.random() * Math.PI * 2,
-        drift: 0.4 + Math.random() * 0.8,
-        size: 1.2 + Math.random() * 1.8,
-        alpha: 0.25 + Math.random() * 0.55,
-      }));
+    function readScroll() {
+      const r = scope.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const span = r.height > vh * 1.2 ? r.height - vh : r.height;
+      return Math.min(1, Math.max(0, -r.top / Math.max(1, span)));
     }
 
-    function draw() {
-      t += reduced ? 0 : 0.008;
-      pointer.x += (pointer.tx - pointer.x) * 0.04;
-      pointer.y += (pointer.ty - pointer.y) * 0.04;
-
-      ctx.clearRect(0, 0, w, h);
-
-      // Glow
-      const gx = w * (0.5 + (pointer.x - 0.5) * 0.25);
-      const gy = h * (0.62 + (pointer.y - 0.5) * 0.15);
-      const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.max(w, h) * 0.75);
-      g.addColorStop(0, 'rgba(79,125,249,0.42)');
-      g.addColorStop(0.35, 'rgba(79,125,249,0.14)');
-      g.addColorStop(0.7, 'rgba(143,211,255,0.04)');
-      g.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
-
-      // Horizon ring
-      ctx.save();
-      ctx.translate(w / 2, h * 1.08);
-      ctx.scale(1, 0.32);
-      for (let i = 0; i < 4; i++) {
-        const rr = w * (0.45 + i * 0.16) + Math.sin(t * 1.3 + i) * 6;
-        ctx.beginPath();
-        ctx.arc(0, 0, rr, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(255,255,255,${0.12 - i * 0.025})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-      ctx.restore();
-
-      // Quark triplets
-      for (const q of triplets) {
-        const cx = (q.x + Math.sin(t * q.drift + q.phase) * 0.02 + (pointer.x - 0.5) * 0.03 * q.drift) * w;
-        const cy = (q.y + Math.cos(t * q.drift * 0.8 + q.phase) * 0.02 + (pointer.y - 0.5) * 0.03 * q.drift) * h;
-        const pts: [number, number][] = [];
-        for (let k = 0; k < 3; k++) {
-          const a = q.phase + t * q.spin + (k * Math.PI * 2) / 3;
-          pts.push([cx + Math.cos(a) * q.r, cy + Math.sin(a) * q.r * 0.75]);
-        }
-        ctx.beginPath();
-        ctx.moveTo(pts[0][0], pts[0][1]);
-        ctx.lineTo(pts[1][0], pts[1][1]);
-        ctx.lineTo(pts[2][0], pts[2][1]);
-        ctx.closePath();
-        ctx.strokeStyle = `rgba(255,255,255,${q.alpha * 0.28})`;
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
-
-        for (const [px, py] of pts) {
-          ctx.beginPath();
-          ctx.arc(px, py, q.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,255,255,${q.alpha})`;
-          ctx.fill();
-        }
-      }
-
-      if (!reduced) raf = requestAnimationFrame(draw);
+    const rot = { x: 0, y: 0, tx: 0, ty: 0 };
+    if (!reduced) {
+      window.addEventListener(
+        'pointermove',
+        (e) => {
+          rot.tx = (e.clientX / window.innerWidth - 0.5) * 0.4;
+          rot.ty = (e.clientY / window.innerHeight - 0.5) * 0.16;
+        },
+        { passive: true },
+      );
     }
 
-    window.addEventListener('resize', resize);
-    window.addEventListener(
-      'pointermove',
-      (e) => {
-        pointer.tx = e.clientX / window.innerWidth;
-        pointer.ty = e.clientY / window.innerHeight;
-      },
-      { passive: true },
-    );
+    const start = performance.now();
+    let scroll = readScroll();
+    let visible = true;
+    let raf = 0;
 
-    // Pause when offscreen
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          cancelAnimationFrame(raf);
-          draw();
-        } else {
-          cancelAnimationFrame(raf);
-        }
-      },
-      { threshold: 0 },
-    );
+    function frame(now: number) {
+      raf = 0;
+      const t = reduced ? 6 : (now - start) / 1000;
+      const intro = reduced ? 1 : Math.min(1, t / 2.8);
+      rot.x += (rot.tx - rot.x) * 0.04;
+      rot.y += (rot.ty - rot.y) * 0.04;
+      const target = readScroll();
+      scroll = reduced ? target : scroll + (target - scroll) * 0.14;
+      stage.style.setProperty('--hp', scroll.toFixed(4));
+
+      gl!.uniform1f(uTime, t);
+      gl!.uniform1f(uIntro, intro);
+      gl!.uniform1f(uScroll, scroll);
+      gl!.uniform2f(uRot, rot.x, rot.y);
+      gl!.clear(gl!.COLOR_BUFFER_BIT);
+      gl!.uniform1f(uLines, 1);
+      bind(lines);
+      gl!.drawArrays(gl!.LINES, 0, lines.count);
+      gl!.uniform1f(uLines, 0);
+      bind(points);
+      gl!.drawArrays(gl!.POINTS, 0, points.count);
+
+      if (!reduced && visible && !document.hidden) kick();
+    }
+
+    function kick() {
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+
+    new ResizeObserver(() => {
+      resize();
+      kick();
+    }).observe(canvas);
+
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) kick();
+    }).observe(scope);
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) kick();
+    });
+    if (reduced) window.addEventListener('scroll', kick, { passive: true });
 
     resize();
-    io.observe(canvas);
+    kick();
+    stage.classList.add('is-live');
   }
+
+  document.querySelectorAll<HTMLElement>('[data-hero-canvas]').forEach(initHero);
 </script>

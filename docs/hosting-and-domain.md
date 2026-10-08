@@ -1,6 +1,6 @@
 # Hosting and domain setup
 
-How the Quark website is hosted and how `qarkenergy.com` is connected to it. Set up on 2026-10-08.
+How the Qark Energy website is hosted and how `qarkenergy.com` is connected to it. Set up on 2026-10-08.
 
 ## At a glance
 

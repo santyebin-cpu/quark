@@ -3,10 +3,11 @@ import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import { news, formatDate } from '../data/news';
+import { site } from '../data/site';
 ---
 
-<Layout title="News" description="Press releases, milestones and coverage of Quark and the Hadron small modular reactor.">
-  <PageHero eyebrow="News" title="Newsroom" intro="Press releases, project milestones and coverage of Quark and the Hadron plant." />
+<Layout title="News" description="Milestones, explainers and policy news from Qark Energy and India's nuclear sector.">
+  <PageHero eyebrow="News" title="Newsroom" intro="Milestones on Qark One, explainers on thorium, and the policy news that shapes nuclear power in India." />
 
   <section class="section pad-top-0">
     <div class="maxWidth">
@@ -14,16 +15,16 @@ import { news, formatDate } from '../data/news';
         {
           news.map((item) => (
             <li class="newsItem reveal">
-              <a class="newsItem__link" href={withBase(`/contact?subject=${encodeURIComponent(item.title)}`)}>
+              <a class="newsItem__link" href={withBase(item.href)}>
                 <div class="newsItem__meta">
-                  <time class="textSmall muted" datetime={item.date}>
+                  <time class="textSmall newsItem__date" datetime={item.date}>
                     {formatDate(item.date)}
                   </time>
                   <span class="textSmall newsItem__tag">{item.tag}</span>
                 </div>
                 <div class="newsItem__body">
                   <h2 class="textH3">{item.title}</h2>
-                  <p class="muted">{item.summary}</p>
+                  <p class="newsItem__summary">{item.summary}</p>
                 </div>
                 <svg class="newsItem__arrow" aria-hidden="true">
                   <use href="#icon-arrow-top-right" />
@@ -36,7 +37,7 @@ import { news, formatDate } from '../data/news';
 
       <div class="newsCta">
         <p class="textH4">Media inquiries</p>
-        <p class="muted">Journalists can reach the communications team at <a class="linkArrow" href="mailto:press@quark.energy">press@quark.energy</a>.</p>
+        <p class="newsCta__text">Journalists can reach us at <a class="linkArrow" href={`mailto:${site.email.media}`}>{site.email.media}</a>.</p>
       </div>
     </div>
   </section>
@@ -56,7 +57,7 @@ import { news, formatDate } from '../data/news';
     grid-template-columns: 1fr auto;
     gap: 1.6rem;
     padding: 3rem 0;
-    transition: padding-left 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: transform 0.4s var(--ease-out);
   }
 
   @media (min-width: 900px) {
@@ -66,8 +67,10 @@ import { news, formatDate } from '../data/news';
     }
   }
 
-  .newsItem__link:hover {
-    padding-left: 1.2rem;
+  .newsItem__date,
+  .newsItem__summary,
+  .newsCta__text {
+    color: var(--color-text-muted);
   }
 
   .newsItem__meta {
@@ -100,11 +103,16 @@ import { news, formatDate } from '../data/news';
     width: 1.6rem;
     height: 1.6rem;
     justify-self: end;
-    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: transform 0.4s var(--ease-out);
   }
 
-  .newsItem__link:hover .newsItem__arrow {
-    transform: translate(0.3rem, -0.3rem);
+  @media (hover: hover) and (pointer: fine) {
+    .newsItem__link:hover {
+      transform: translateX(1.2rem);
+    }
+    .newsItem__link:hover .newsItem__arrow {
+      transform: translate(0.3rem, -0.3rem);
+    }
   }
 
   .newsCta {

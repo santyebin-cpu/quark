@@ -1,20 +1,48 @@
 ---
+import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionNumber from '../components/SectionNumber.astro';
-import { board, leadership } from '../data/team';
+import Render from '../components/Render.astro';
+import factoryHall from '../assets/plant/factory-hall.jpg';
 
-const bios = [...board, ...leadership].filter((p, i, arr) => p.bio && arr.findIndex((x) => x.name === p.name) === i);
+const principles = [
+  {
+    title: 'Physics before machinery',
+    text: 'Gravity, natural circulation and large pools of water keep Qark One safe, so its safety does not depend on pumps, power or people.',
+  },
+  {
+    title: 'Built in India',
+    text: 'We design for components that Indian industry can make, and for sites and grids that India already has.',
+  },
+  {
+    title: 'Only what is true',
+    text: 'We publish our reference data and say plainly where the design stands. Concept means concept.',
+  },
+  {
+    title: 'Part of a national effort',
+    text: 'India’s nuclear institutions have worked towards thorium for seventy years. We aim to work alongside them.',
+  },
+];
+
+const disciplines = [
+  'Reactor physics',
+  'Thermal-hydraulics',
+  'Fuel design',
+  'Mechanical and structural design',
+  'Safety analysis and licensing',
+  'Manufacturing and supply chain',
+];
 ---
 
 <Layout
   title="About"
-  description="Quark's innovators create small modular reactors to provide safe, affordable and abundant carbon-free energy and heat."
+  description="Qark Energy is developing Qark One, a thorium-fuelled small modular reactor, to bring more firm, carbon-free power to India."
 >
   <PageHero
     eyebrow="About"
-    title="About Quark"
-    intro="Quark's innovators create technologies to provide safe, affordable and abundant carbon-free energy. They devise ways to use heat and electricity to drive economic growth while decarbonizing industry. And they build the factories that will make nuclear plants a product rather than a project."
+    title="About Qark Energy"
+    intro="Qark Energy is developing Qark One, a thorium-fuelled small modular reactor, to bring more firm, carbon-free power to India."
   />
 
   <section class="section pad-top-0">
@@ -22,30 +50,20 @@ const bios = [...board, ...leadership].filter((p, i, arr) => p.bio && arr.findIn
       <div class="grid">
         <div class="side">
           <SectionNumber n={2} />
-          <h2 class="textH3 reveal">Unparalleled technical and engineering expertise</h2>
+          <h2 class="textH3 reveal">Why we exist</h2>
         </div>
         <div class="prose reveal">
           <p>
-            Our team combines deep technical and engineering expertise, experience delivering nuclear projects, and a
-            track record of building organizations that tackle large-scale global challenges. Quark was founded in 2016
-            by a reactor physicist and an infrastructure investor who agreed on one thing: nuclear power would only
-            scale again if plants became small enough to build in a factory and simple enough to be safe without
-            intervention.
+            India will need far more electricity in the coming decades, and much of it has to be firm: available at
+            night, in the monsoon and through every season. Nuclear power can supply it without burning fuel, and India
+            has set out to expand it to 100 GW by 2047.
           </p>
           <p>
-            Advanced manufacturing, modern simulation and a regulatory framework for advanced reactors have made that
-            possible in ways that were unimaginable a few decades ago. At Quark, we are innovating in nuclear to improve
-            the lives of people everywhere and to build the clean energy of tomorrow — today.
+            The country also holds one of the world’s largest reserves of thorium. We started Qark Energy to put that
+            resource to work in a reactor that can be built quickly, run safely and made with Indian industry.
           </p>
         </div>
       </div>
-
-      <ul class="figures">
-        <li class="reveal"><p class="textH1">2016</p><p class="muted">Founded</p></li>
-        <li class="reveal" style="--delay:80ms"><p class="textH1">640</p><p class="muted">Employees across four offices</p></li>
-        <li class="reveal" style="--delay:160ms"><p class="textH1">480<span class="muted"> MWe</span></p><p class="muted">Under construction in Idaho</p></li>
-        <li class="reveal" style="--delay:240ms"><p class="textH1">3.2<span class="muted"> GWe</span></p><p class="muted">Contracted and optioned pipeline</p></li>
-      </ul>
     </div>
   </section>
 
@@ -54,14 +72,14 @@ const bios = [...board, ...leadership].filter((p, i, arr) => p.bio && arr.findIn
       <div class="grid">
         <div class="side">
           <SectionNumber n={3} />
-          <h2 class="textH3 reveal">Quark board</h2>
+          <h2 class="textH3 reveal">How we work</h2>
         </div>
-        <ul class="people">
+        <ul class="ab__principles">
           {
-            board.map((p, i) => (
-              <li class="reveal" style={`--delay:${(i % 3) * 70}ms`}>
-                <h3 class="textH4">{p.name}</h3>
-                <p class="muted">{p.role}</p>
+            principles.map((p, i) => (
+              <li class="reveal" style={`--delay:${(i % 2) * 90}ms`}>
+                <h3 class="textH4">{p.title}</h3>
+                <p class="ab__principleText">{p.text}</p>
               </li>
             ))
           }
@@ -75,112 +93,87 @@ const bios = [...board, ...leadership].filter((p, i, arr) => p.bio && arr.findIn
       <div class="grid">
         <div class="side">
           <SectionNumber n={4} />
-          <h2 class="textH3 reveal">Leadership team</h2>
+          <h2 class="textH3 reveal">The work</h2>
         </div>
-        <ul class="people people--light">
-          {
-            leadership.map((p, i) => (
-              <li class="reveal" style={`--delay:${(i % 3) * 70}ms`}>
-                <h3 class="textH4">{p.name}</h3>
-                <p class="muted">{p.role}</p>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="section pad-top-0">
-    <div class="maxWidth">
-      <div class="grid">
-        <div class="side">
-          <SectionNumber n={5} />
-          <h2 class="textH3 reveal">Biographies</h2>
-        </div>
-        <div class="prose">
-          {
-            bios.map((p) => (
-              <article class="bio reveal">
-                <h3 class="textH4">{p.name}</h3>
-                <p class="textSmall muted">{p.role}</p>
-                <p>{p.bio}</p>
-              </article>
-            ))
-          }
+        <div class="prose reveal">
+          <p>
+            Designing a reactor takes many disciplines working as one. Ours span the core, the fuel, the plant around
+            them and the case that shows it is safe, and we are growing in each of them.
+          </p>
+          <ul class="ab__disciplines">
+            {disciplines.map((d) => <li>{d}</li>)}
+          </ul>
+          <div class="pageHero__actions">
+            <a class="btnMain btnMain--solid" href={withBase('/careers')}>
+              Join the team
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+            </a>
+            <a class="btnMain" href={withBase('/contact')}>
+              Get in touch
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
+            </a>
+          </div>
         </div>
       </div>
+      <Render
+        src={factoryHall}
+        alt="Concept render of a factory hall where large reactor components are fabricated"
+        class="ab__render"
+        sizes="100vw"
+      />
     </div>
   </section>
 </Layout>
 
 <style>
-  .figures {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3rem 1.6rem;
-    margin-top: 8rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--color-line);
-  }
-
-  @media (min-width: 900px) {
-    .figures {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .figures li {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-  }
-
-  .people {
+  .ab__principles {
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 1fr;
     gap: 0 1.6rem;
   }
 
-  @media (min-width: 600px) {
-    .people {
+  @media (min-width: 700px) {
+    .ab__principles {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (min-width: 900px) {
-    .people {
+    .ab__principles {
       grid-column: 4 / span 9;
-      grid-template-columns: repeat(3, 1fr);
     }
   }
 
-  .people li {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 2rem 0 2.8rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-  }
-
-  .people--light li {
-    border-top-color: var(--color-line);
-  }
-
-  .bio {
-    padding: 3rem 0;
-    border-top: 1px solid var(--color-line);
+  .ab__principles li {
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
+    padding: 2.4rem 0 3.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
   }
 
-  .bio + .bio {
-    margin-top: 0;
+  .ab__principleText {
+    color: var(--color-grey-on-black);
   }
 
-  .bio p:last-child {
-    margin-top: 1rem;
+  .ab__disciplines {
+    border-top: 1px solid var(--color-line);
+  }
+
+  .ab__disciplines li {
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .maxWidth :global(.ab__render) {
+    margin-top: 8rem;
+    aspect-ratio: 4 / 3;
+  }
+
+  @media (min-width: 900px) {
+    .maxWidth :global(.ab__render) {
+      aspect-ratio: 21 / 9;
+    }
   }
 </style>

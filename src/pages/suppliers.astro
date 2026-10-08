@@ -3,35 +3,39 @@ import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionNumber from '../components/SectionNumber.astro';
+import { site } from '../data/site';
 
 const categories = [
-  ['Heavy forgings and vessels', 'Reactor vessel shells, heads, nozzles and steam generator tubesheets to ASME Section III, Division 1.'],
-  ['Nuclear-grade piping and valves', 'Small-bore safety-related piping, isolation valves and passive safety system components.'],
-  ['Instrumentation and control', 'Safety-related I&C platforms, sensors, cabling and digital control room systems.'],
-  ['Fuel and core components', 'Fuel assembly hardware, control rod drive mechanisms, in-core instrumentation.'],
-  ['Civil and structural', 'Below-grade pool construction, seismic isolators, steel liners and modular rebar.'],
-  ['Turbine island and balance of plant', 'Steam turbines, condensers, feedwater systems, switchyard and heat-delivery piping.'],
-  ['Factory equipment and tooling', 'Machining centers, automated welding, non-destructive examination and lifting equipment.'],
-  ['Professional services', 'Engineering, licensing support, construction management and training.'],
+  ['Heavy forgings and vessels', 'The calandria, end shields, steam drums and other large pressure-retaining parts.'],
+  ['Pressure tubes and channel parts', 'Zirconium-alloy pressure tubes, end fittings and the hardware of the 452 fuel channels.'],
+  ['Piping and valves', 'Large-bore piping for the natural-circulation loop, safety valves and balance-of-plant equipment.'],
+  ['Fuel handling', 'Fuelling machines and handling equipment for on-power, top-entry refuelling.'],
+  ['Instrumentation and control', 'Safety-grade instrumentation, both shutdown systems and control-room equipment.'],
+  ['Turbine island', 'Turbine-generators, condensers, feedwater and electrical systems.'],
+  ['Civil, structural and cranes', 'The reactor building, its pools, heavy cranes and site construction.'],
+  ['Engineering services', 'Analysis, design, licensing support and training.'],
 ];
 
 const steps = [
-  ['Register', 'Submit your company profile, capabilities and quality certifications through the supplier portal.'],
-  ['Qualify', 'Our supplier quality team reviews your quality program against 10 CFR 50 Appendix B and NQA-1 requirements and schedules an audit where needed.'],
-  ['Bid', 'Qualified suppliers receive requests for proposal for packages matching their capabilities.'],
-  ['Deliver', 'Awarded suppliers join our production schedule with shared tooling, inspection plans and a single quality data system.'],
+  ['Register interest', 'Tell us what you make, the codes you work to and the certifications you hold.'],
+  ['Capability review', 'We review your capabilities against the parts of the plant you could supply.'],
+  ['Design for manufacture', 'Promising suppliers help shape parts of the design so they can be built well in India.'],
+  ['Qualify and bid', 'When procurement begins, suppliers are formally qualified and invited to bid.'],
 ];
 ---
 
-<Layout title="Suppliers" description="Work with Quark as a supplier of forgings, components, services and construction for Hadron plants.">
+<Layout
+  title="Suppliers"
+  description="Work with Qark Energy as a supplier of forgings, channel components, equipment and services for Qark One plants in India."
+>
   <PageHero
     eyebrow="Suppliers"
     title="Build with us"
-    intro="A Hadron module has roughly 11,000 parts, and a factory producing one module every nine weeks needs a supply chain that thinks in production rates. We are building that supply chain now."
+    intro="Qark One is designed to be built with Indian industry. We want to hear from manufacturers and service firms that could supply the plant as the design develops."
   >
     <div class="pageHero__actions">
-      <a class="btnMain btnMain--solid" href={withBase('/contact?subject=Supplier%20registration')}>
-        Register as a supplier
+      <a class="btnMain btnMain--solid" href={withBase('/contact?topic=suppliers')}>
+        Register your interest
         <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
       </a>
     </div>
@@ -42,7 +46,7 @@ const steps = [
       <div class="grid">
         <div class="side">
           <SectionNumber n={2} />
-          <h2 class="textH3 reveal">What we buy</h2>
+          <h2 class="textH3 reveal">What a plant needs</h2>
         </div>
         <div class="supplierTable reveal">
           <div class="rows">
@@ -50,7 +54,7 @@ const steps = [
               categories.map(([k, v]) => (
                 <div class="row">
                   <p class="textH4">{k}</p>
-                  <p class="muted">{v}</p>
+                  <p class="supplierTable__text">{v}</p>
                 </div>
               ))
             }
@@ -65,15 +69,15 @@ const steps = [
       <div class="grid">
         <div class="side">
           <SectionNumber n={3} />
-          <h2 class="textH3 reveal">How to work with Quark</h2>
+          <h2 class="textH3 reveal">How to work with us</h2>
         </div>
         <ol class="steps">
           {
             steps.map(([k, v], i) => (
               <li class="reveal" style={`--delay:${i * 80}ms`}>
-                <p class="textH1">{String(i + 1).padStart(2, '0')}</p>
+                <p class="textSmall steps__n tabular">Step {i + 1}</p>
                 <h3 class="textH4">{k}</h3>
-                <p class="muted">{v}</p>
+                <p class="steps__text">{v}</p>
               </li>
             ))
           }
@@ -87,21 +91,20 @@ const steps = [
       <div class="grid">
         <div class="side">
           <SectionNumber n={4} />
-          <h2 class="textH3 reveal">Supplier expectations</h2>
+          <h2 class="textH3 reveal">What to expect</h2>
         </div>
         <div class="prose reveal">
           <p>
-            Safety-related suppliers must hold a quality assurance program meeting 10 CFR 50 Appendix B and ASME NQA-1,
-            and must be able to support commercial-grade dedication where applicable. All suppliers are expected to
-            comply with our Supplier Code of Conduct covering ethics, labor practices, export control and
-            cybersecurity.
+            Qark One is at concept stage, so we are not buying hardware yet. We are building a list of capable
+            suppliers to involve as the design develops, and we would rather hear from you early.
           </p>
           <p>
-            We give preference to suppliers located near our Columbus factory and plant sites, and we fund training
-            and certification for small manufacturers who want to enter the nuclear supply chain.
+            Suppliers of safety-related parts will need a quality-assurance programme that meets the nuclear standards
+            that apply in India, and every supplier will be expected to work to a code of conduct covering ethics,
+            labour practices and security.
           </p>
           <p>
-            Questions can be sent to <a class="linkArrow" href="mailto:suppliers@quark.energy">suppliers@quark.energy</a>.
+            Questions can be sent to <a class="linkArrow" href={`mailto:${site.email.suppliers}`}>{site.email.suppliers}</a>.
           </p>
         </div>
       </div>
@@ -118,6 +121,10 @@ const steps = [
     .supplierTable {
       grid-column: 4 / span 9;
     }
+  }
+
+  .supplierTable__text {
+    color: var(--color-text-muted);
   }
 
   .steps {
@@ -148,8 +155,8 @@ const steps = [
     border-top: 1px solid rgba(255, 255, 255, 0.15);
   }
 
-  .steps li .textH1 {
+  .steps__n,
+  .steps__text {
     color: var(--color-grey-on-black);
-    margin-bottom: 1.6rem;
   }
 </style>
