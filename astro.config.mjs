@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://qark.energy', // placeholder until the real domain is confirmed
+  site: 'https://qarkenergy.com',
   trailingSlash: 'never',
   build: {
     format: 'file',

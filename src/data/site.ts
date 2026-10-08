@@ -1,5 +1,5 @@
-// Placeholder until the real domain is confirmed; every email address on the site derives from it.
-const emailDomain = 'qark.energy';
+// The site's domain (see astro.config.mjs); every email address on the site derives from it.
+const emailDomain = 'qarkenergy.com';
 
 export const site = {
   name: 'Qark Energy',

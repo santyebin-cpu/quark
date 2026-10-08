@@ -15,7 +15,7 @@ Proof and content: five user-supplied concept renders (`src/assets/plant/*`) and
 
 Constraints: inherit the incumbent visual system (CLAUDE.md): black WebGL hero, two-tone headlines, violet `#745adb` accent, Instrument Sans, fixed chapter indicator, rounded photo frames, Lenis smooth scroll, `html.motion-reduced`.
 
-Unresolved: office address and email domain (placeholders until the user supplies them).
+Unresolved: office address (placeholder until the user supplies it). Email addresses use qarkenergy.com.
 
 ## Direction contract
 

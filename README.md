@@ -62,21 +62,15 @@ public/         favicon.svg
 
 The site is fully static (`dist/`), so any static host works. Internal links go through `withBase()` in `src/lib/paths.ts`, so the build also works under a sub-path.
 
-**GitHub Pages** (`.github/workflows/deploy-pages.yml`)
-Pushes to `main` build and deploy to `https://<owner>.github.io/quark/`. GitHub Pages on a private repository requires GitHub Pro/Team; either make the repo public or upgrade. If the first run fails on "Configure Pages", go to Settings → Pages and set Source to "GitHub Actions", then re-run the workflow.
+**Cloudflare Pages** (production, live at [qarkenergy.com](https://qarkenergy.com))
+The Pages project is connected to this repo with production branch `main`, framework preset Astro, build command `npm run build`, output directory `dist` and `NODE_VERSION=22`. Every push to `main` deploys; other branches get preview URLs. Cloudflare serves `/qark-one` from `qark-one.html` and uses `404.html` for misses without extra config. The full setup history, DNS records and troubleshooting steps are in [docs/hosting-and-domain.md](docs/hosting-and-domain.md).
 
-**Netlify** (`netlify.toml`)
-Import the repo at app.netlify.com; build settings are detected from `netlify.toml`.
-
-**Vercel** (`vercel.json`)
-Import the repo at vercel.com/new; Astro is detected automatically and `cleanUrls` serves `/qark-one` from `qark-one.html`.
-
-**Cloudflare Pages**
-Create a Pages project from the repo with build command `npm run build` and output directory `dist`.
+**Netlify** (`netlify.toml`) / **Vercel** (`vercel.json`)
+Alternative hosts; import the repo and the build settings are picked up from these files.
 
 ## Notes
 
-- Brand, navigation and email addresses live in `src/data/site.ts`. **Placeholders to replace before launch:** the email domain (`qark.energy`, also the `site` URL in `astro.config.mjs`) and the registered office address.
+- Brand, navigation and email addresses live in `src/data/site.ts`. Every address uses `qarkenergy.com` (hello@, partners@, suppliers@, investors@, careers@, media@, privacy@); make sure those mailboxes or aliases exist. **Placeholder to replace:** the registered office address, which shows "Full address to follow".
 - Every reactor figure comes from drawing QE-GA-001 via `src/data/qark-one.ts`; update that one file when the design changes.
 - The contact form has no backend: it composes the message in the visitor's email app, addressed by topic. Wire `data-contact-form` in `src/pages/contact.astro` to a form service or API route when one exists.
 - No site, partners, timelines, people or customers are stated anywhere; add them only when they are real and public.
