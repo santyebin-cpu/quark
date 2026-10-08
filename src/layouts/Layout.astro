@@ -46,14 +46,14 @@ const canonical = new URL(cleanPath, Astro.site);
       (function () {
         var root = document.documentElement;
         root.classList.add('js');
-        // Honour the OS "reduce motion" setting. ?motion=full or ?motion=reduced overrides it for this tab.
+        // Full motion for every visitor by default (owner's decision; the OS "reduce motion" setting is not followed).
+        // ?motion=reduced switches to the still version for this tab, ?motion=full switches back.
         var mode = new URLSearchParams(location.search).get('motion');
         try {
           if (mode) sessionStorage.setItem('qark-motion', mode);
           mode = sessionStorage.getItem('qark-motion');
         } catch (e) {}
-        var reduced =
-          mode === 'full' ? false : mode === 'reduced' ? true : matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var reduced = mode === 'reduced';
         if (reduced) root.classList.add('motion-reduced');
       })();
     </script>
