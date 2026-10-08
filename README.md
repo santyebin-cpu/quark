@@ -53,17 +53,11 @@ public/         favicon.svg
 
 The site is fully static (`dist/`), so any static host works. Internal links go through `withBase()` in `src/lib/paths.ts`, so the build also works under a sub-path.
 
-**GitHub Pages** (`.github/workflows/deploy-pages.yml`)
-Pushes to `main` build and deploy to `https://<owner>.github.io/quark/`. GitHub Pages on a private repository requires GitHub Pro/Team; either make the repo public or upgrade. If the first run fails on "Configure Pages", go to Settings → Pages and set Source to "GitHub Actions", then re-run the workflow.
+**Cloudflare Pages** (production)
+The Pages project is connected to this repo with production branch `main`, framework preset Astro, build command `npm run build`, output directory `dist` and `NODE_VERSION=22`. Every push to `main` deploys; other branches get preview URLs. Cloudflare serves `/hadron` from `hadron.html` and uses `404.html` for misses without extra config.
 
-**Netlify** (`netlify.toml`)
-Import the repo at app.netlify.com; build settings are detected from `netlify.toml`.
-
-**Vercel** (`vercel.json`)
-Import the repo at vercel.com/new; Astro is detected automatically and `cleanUrls` serves `/hadron` from `hadron.html`.
-
-**Cloudflare Pages**
-Create a Pages project from the repo with build command `npm run build` and output directory `dist`.
+**Netlify** (`netlify.toml`) / **Vercel** (`vercel.json`)
+Alternative hosts; import the repo and the build settings are picked up from these files.
 
 ## Notes
 
