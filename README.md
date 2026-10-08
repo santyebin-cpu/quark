@@ -53,8 +53,8 @@ public/         favicon.svg
 
 The site is fully static (`dist/`), so any static host works. Internal links go through `withBase()` in `src/lib/paths.ts`, so the build also works under a sub-path.
 
-**Cloudflare Pages** (production)
-The Pages project is connected to this repo with production branch `main`, framework preset Astro, build command `npm run build`, output directory `dist` and `NODE_VERSION=22`. Every push to `main` deploys; other branches get preview URLs. Cloudflare serves `/hadron` from `hadron.html` and uses `404.html` for misses without extra config.
+**Cloudflare Pages** (production, live at [qarkenergy.com](https://qarkenergy.com))
+The Pages project is connected to this repo with production branch `main`, framework preset Astro, build command `npm run build`, output directory `dist` and `NODE_VERSION=22`. Every push to `main` deploys; other branches get preview URLs. Cloudflare serves `/hadron` from `hadron.html` and uses `404.html` for misses without extra config. The full setup history, DNS records and troubleshooting steps are in [docs/hosting-and-domain.md](docs/hosting-and-domain.md).
 
 **Netlify** (`netlify.toml`) / **Vercel** (`vercel.json`)
 Alternative hosts; import the repo and the build settings are picked up from these files.
