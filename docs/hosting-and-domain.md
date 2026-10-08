@@ -44,7 +44,7 @@ Build status and logs: Cloudflare dashboard → **Workers & Pages → quark → 
   - Build command: `npm run build`
   - Build output directory: `dist`
   - Environment variable: `NODE_VERSION=22`
-- No extra config needed: Cloudflare serves `/hadron` from `hadron.html` and uses `404.html` for missing pages.
+- No extra config needed: Cloudflare serves `/qark-one` from `qark-one.html` and uses `404.html` for missing pages.
 
 ### 3. Site URL set to the real domain
 
@@ -81,11 +81,21 @@ Cloudflare → Workers & Pages → quark → Custom domains → Set up a custom 
 
 Cloudflare created proxied CNAME records for both pointing at `quark-6qs.pages.dev`.
 
-### 7. Verified
+### 7. Old Google nameservers pointed at the new site (2026-10-08)
+
+After the switch, some DNS resolvers (home routers, mobile carriers) had cached the old delegation to Google Cloud DNS (`ns-cloud-b*.googledomains.com`, cached for up to 48 hours). Squarespace keeps that old zone running, and it kept handing out the "Coming Soon" address with a fresh 4-hour TTL. To make both sets of nameservers agree, in Squarespace → Domains → qarkenergy.com → DNS Settings:
+
+- Deleted the **Squarespace Defaults** preset (`A @ → 198.49.23.144`, `CNAME www → ext-sq.squarespace.com`).
+- Added custom records: `A @ → 188.114.96.5`, `A @ → 188.114.97.5`, `CNAME www → quark-6qs.pages.dev`.
+- Left the **Domain Connect to Google** preset (MX + TXT) untouched.
+
+Squarespace labels these records inactive because the domain uses custom nameservers, but the changes do reach the old Google nameservers. Once every cache has expired (about 48 hours after the nameserver switch) the old zone is no longer consulted, and these records can stay as a harmless fallback.
+
+### 8. Verified
 
 - All 14 pages return 200 with the right titles; unknown paths return the custom 404.
 - CSS assets and favicon load; internal links resolve.
-- `http://` redirects to `https://`; `/hadron.html` redirects to `/hadron`.
+- `http://` redirects to `https://`; `/page.html` redirects to `/page`.
 - Canonical URLs use `https://qarkenergy.com`.
 - The content on qarkenergy.com matches the `quark-6qs.pages.dev` deployment exactly.
 - Public resolvers (1.1.1.1, 8.8.8.8, 9.9.9.9, OpenDNS) return Cloudflare addresses, and all 5 Google MX records are intact.
@@ -106,6 +116,23 @@ Cloudflare created proxied CNAME records for both pointing at `quark-6qs.pages.d
 | CNAME | `_domainconnect` | `_domainconnect.domains.squarespace.com` | Proxied | Leftover from Squarespace; harmless |
 
 Do not delete the MX or TXT records: Google Workspace email depends on them.
+
+## Search engine setup (SEO)
+
+Built into the site:
+
+- `robots.txt` allows all crawlers and points to the sitemap.
+- `sitemap-index.xml` / `sitemap-0.xml` are generated on every build by `@astrojs/sitemap` (configured in `astro.config.mjs`), listing every page except the 404, without `.html`.
+- Every page has a unique `<title>`, meta description, canonical URL, Open Graph and Twitter tags, and one `<h1>`.
+- Organization structured data (JSON-LD) on every page; WebSite structured data on the home page (in `src/layouts/Layout.astro`). Add the real LinkedIn/X profile URLs as `sameAs` there once they exist.
+- Icons for browsers, Google results and phones: `favicon.svg`, `favicon-48.png`, `apple-touch-icon.png`, `icon-512.png` (also the logo in structured data).
+
+One-time setup outside the code (search engines discover the site faster this way):
+
+1. Google Search Console → add a **Domain** property for `qarkenergy.com` (the existing `google-site-verification` TXT record may already verify it).
+2. Sitemaps → submit `https://qarkenergy.com/sitemap-index.xml`.
+3. URL Inspection → `https://qarkenergy.com/` → **Request indexing**.
+4. Bing Webmaster Tools → **Import from Google Search Console** (also covers DuckDuckGo and Yahoo, which use Bing).
 
 ## Troubleshooting
 
@@ -129,7 +156,7 @@ It should return Cloudflare addresses (`188.114.96.x` / `188.114.97.x`), not `19
 
 ## Open items
 
-- Contact and legal pages still show placeholder addresses like `hello@quark.energy`. Replace them with real `@qarkenergy.com` mailboxes.
+- The site uses `hello@`, `partners@`, `suppliers@`, `investors@`, `careers@`, `media@` and `privacy@qarkenergy.com` (see `src/data/site.ts`). Make sure each exists as a mailbox or alias in Google Workspace.
 - The build log warns that Node 22 is nearing end of life. Later, change `NODE_VERSION` to `24` in Pages → Settings → Variables and secrets.
 - Optional: redirect `www.qarkenergy.com` to `qarkenergy.com` (currently both serve the same site; pages already declare `qarkenergy.com` as canonical).
 - Optional: add a DMARC record (Cloudflare suggests one) to reduce spoofed email from `@qarkenergy.com`.
