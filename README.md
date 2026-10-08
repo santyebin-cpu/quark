@@ -17,7 +17,7 @@ Marketing website for Qark Energy and Qark One, a thorium-fuelled small modular 
 
 ### Motion
 
-Animations follow the visitor's OS "reduce motion" setting: with it on, movement (smooth scrolling, parallax, zooms, the camera tour and pans) is replaced by fades. To preview either mode regardless of that setting, add `?motion=full` or `?motion=reduced` to any URL; the choice sticks for the browser tab.
+Animations play for every visitor by default; the OS "reduce motion" setting is not followed. A still version, where movement (smooth scrolling, parallax, zooms, the camera tour and pans) is replaced by fades, is available with `?motion=reduced` (and `?motion=full` switches back); the choice sticks for the browser tab.
 
 ## Development
 
