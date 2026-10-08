@@ -2,68 +2,41 @@ export type NewsItem = {
   date: string;
   title: string;
   summary: string;
-  tag: 'Press Release' | 'Milestone' | 'In the News' | 'Event';
+  tag: 'Milestone' | 'Explainer' | 'Policy';
+  /** Site page with the full story. */
+  href: string;
 };
 
+// Only verifiable items: Qark Energy's own published work and public Indian policy.
 export const news: NewsItem[] = [
   {
-    date: '2026-09-18',
-    title: 'Quark pours first nuclear concrete at the Hadron Idaho plant',
+    date: '2026-10-03',
+    title: 'Qark One general arrangement released',
     summary:
-      'The pour marks the start of safety-related construction for the first commercial Hadron module and keeps the project on schedule for fuel load in 2028.',
+      'Drawing QE-GA-001 (rev A, concept status) sets out the Qark One reactor block, its 513-position core lattice and the principal data, based on published AHWR-300 LEU data.',
     tag: 'Milestone',
+    href: '/qark-one#data',
   },
   {
-    date: '2026-07-30',
-    title: 'NRC issues construction permit for the Hadron demonstration plant',
+    date: '2026-10-03',
+    title: 'Why thorium, and why India',
     summary:
-      'Following a 26-month review, the U.S. Nuclear Regulatory Commission has approved the construction permit application for a six-module, 480 MWe Hadron plant.',
-    tag: 'Press Release',
+      'How thorium breeds its own fuel, why India holds so much of it, and where Qark One sits in the country’s three-stage nuclear programme.',
+    tag: 'Explainer',
+    href: '/thorium',
   },
   {
-    date: '2026-06-11',
-    title: 'Quark and Great Basin Power sign agreement for a second Hadron site',
+    date: '2025-02-01',
+    title: 'India announces a Nuclear Energy Mission for small modular reactors',
     summary:
-      'The agreement covers early site work and long-lead procurement for a four-module plant that will replace a retiring coal station in northern Nevada.',
-    tag: 'Press Release',
-  },
-  {
-    date: '2026-04-22',
-    title: 'Quark Heat selected to supply process steam to a Gulf Coast chemical complex',
-    summary:
-      'Two Hadron modules will deliver 320 ºC steam to a petrochemical facility, displacing roughly 1.2 million tonnes of CO₂ per year.',
-    tag: 'Press Release',
-  },
-  {
-    date: '2026-03-05',
-    title: 'Hadron forging line reaches full production rate',
-    summary:
-      'Our Columbus, Ohio module factory completed its first production vessel on schedule, and is now capable of producing one integral reactor vessel every nine weeks.',
-    tag: 'Milestone',
-  },
-  {
-    date: '2026-02-14',
-    title: 'How a small reactor company plans to build like a car company',
-    summary: 'Feature coverage of the Hadron factory and the economics of standardized reactor modules.',
-    tag: 'In the News',
-  },
-  {
-    date: '2025-11-20',
-    title: 'Quark closes $650 million Series D to scale Hadron manufacturing',
-    summary:
-      'The round funds a second forging line, long-lead procurement for the Idaho plant and growth of the licensing and engineering teams.',
-    tag: 'Press Release',
-  },
-  {
-    date: '2025-10-02',
-    title: 'Quark to present at the American Nuclear Society Winter Meeting',
-    summary: 'Our CTO will present results from the Hadron integral effects test loop in Boise.',
-    tag: 'Event',
+      'The Union Budget 2025–26 set aside ₹20,000 crore for research and development of small modular reactors, aiming for at least five indigenously developed SMRs in operation by 2033 and 100 GW of nuclear power by 2047.',
+    tag: 'Policy',
+    href: '/india',
   },
 ];
 
 export function formatDate(iso: string) {
-  return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', {
+  return new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

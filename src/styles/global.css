@@ -5,16 +5,22 @@
   --color-ink: #2a2a2e;
   --color-grey-on-white: #8f8f92;
   --color-grey-on-black: #b2b2b3;
+  /* Grey for small text on white: #8f8f92 passes only at display sizes (3.2:1); this passes 4.5:1. */
+  --color-text-muted: #6b6b70;
+  --color-navy: #0c2645;
   --color-line: #e0e0e0;
   --color-surface: #f5f5f5;
-  --color-accent: #4f7df9;
-  --color-accent-deep: #2a4bd7;
-  --color-glow: #8fd3ff;
+  --color-accent: #745adb;
+  --color-accent-deep: #5a41c2;
+  --color-glow: #b9a8ff;
 
   --radius: 12px;
   --nav-h: 3.3rem;
   --gutter: 2rem;
   --font: 'Instrument Sans', 'Helvetica Neue', Roboto, Arial, sans-serif;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @media (min-width: 900px) {
@@ -36,6 +42,11 @@ html {
   font-size: 2.6666vw;
   font-synthesis: none;
   scroll-behavior: smooth;
+}
+
+/* Lenis animates the scroll itself; native smoothing would fight it. */
+html.lenis {
+  scroll-behavior: auto;
 }
 
 @media (min-width: 450px) {
@@ -137,6 +148,38 @@ svg {
 ::selection {
   background: var(--color-accent);
   color: var(--color-white);
+}
+
+/* Browser surfaces carry the palette too. */
+html {
+  caret-color: var(--color-accent);
+  accent-color: var(--color-accent);
+  scrollbar-color: rgba(120, 120, 128, 0.55) transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+a {
+  text-underline-offset: 0.22em;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- Type scale ---------- */
@@ -344,22 +387,21 @@ svg {
   font-size: 1.3rem;
   line-height: 1;
   letter-spacing: 0.026rem;
-  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.16s var(--ease-out);
 }
 
-.btnMain:hover {
-  background: var(--color-ink);
-  color: var(--color-white);
+.btnMain:active {
+  transform: scale(0.97);
 }
 
 .btnMain__icon {
   width: 1.4rem;
   height: 1.4rem;
-  transition: transform 0.3s ease;
-}
-
-.btnMain:hover .btnMain__icon {
-  transform: rotate(90deg);
+  transition: transform 0.3s var(--ease-out);
 }
 
 .onDark .btnMain,
@@ -368,21 +410,32 @@ svg {
   color: var(--color-white);
 }
 
-.onDark .btnMain:hover,
-.btnMain--light:hover {
-  background: var(--color-white);
-  color: var(--color-black);
-}
-
 .btnMain--solid {
   background: var(--color-ink);
   color: var(--color-white);
 }
 
-.btnMain--solid:hover {
-  background: var(--color-accent-deep);
-  border-color: var(--color-accent-deep);
-  color: var(--color-white);
+@media (hover: hover) and (pointer: fine) {
+  .btnMain:hover {
+    background: var(--color-ink);
+    color: var(--color-white);
+  }
+
+  .btnMain:hover .btnMain__icon {
+    transform: rotate(90deg);
+  }
+
+  .onDark .btnMain:hover,
+  .btnMain--light:hover {
+    background: var(--color-white);
+    color: var(--color-black);
+  }
+
+  .btnMain--solid:hover {
+    background: var(--color-accent-deep);
+    border-color: var(--color-accent-deep);
+    color: var(--color-white);
+  }
 }
 
 .linkArrow {
@@ -400,15 +453,71 @@ svg {
   transition: transform 0.3s ease;
 }
 
-.linkArrow:hover svg {
-  transform: translate(0.2rem, -0.2rem);
+@media (hover: hover) and (pointer: fine) {
+  .linkArrow:hover svg {
+    transform: translate(0.2rem, -0.2rem);
+  }
+}
+
+/* Small two-line uppercase link with a violet dot */
+.learnMore {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.1rem;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.learnMore--light {
+  color: var(--color-white);
+}
+
+.learnMore__dot {
+  position: relative;
+  flex: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-bottom: 0.1rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-accent);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.learnMore__dot::after {
+  content: '';
+  position: absolute;
+  inset: 0.15rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  transform: scale(0.55);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.learnMore:active .learnMore__dot {
+  transform: scale(0.92);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .learnMore:hover .learnMore__dot {
+    transform: scale(1.25);
+  }
+
+  .learnMore:hover .learnMore__dot::after {
+    transform: scale(1);
+  }
 }
 
 /* ---------- Reveal animation ---------- */
 html.js .reveal {
   opacity: 0;
   transform: translateY(2.4rem);
-  transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition:
+    opacity 1.2s var(--ease-out),
+    transform 1.4s var(--ease-out);
   transition-delay: var(--delay, 0ms);
 }
 
@@ -417,15 +526,164 @@ html.js .reveal.is-visible {
   transform: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  html {
-    scroll-behavior: auto;
-  }
+/* Headlines: each .line is a mask its text slides up out of. */
+.lines .line {
+  display: block;
+  overflow: hidden;
+  /* room for descenders inside the mask (display sizes use line-height < 1) */
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+  color: inherit;
+}
+
+.lines--inline .line {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.lines .line > span {
+  display: inline-block;
+  color: inherit;
+}
+
+html.js .lines .line > span {
+  transform: translate3d(0, 110%, 0);
+  transition: transform 1.4s var(--ease-out);
+  transition-delay: calc(var(--delay, 0ms) + var(--i, 0) * 90ms);
+}
+
+html.js .lines .line:nth-child(2) > span {
+  --i: 1;
+}
+
+html.js .lines .line:nth-child(3) > span {
+  --i: 2;
+}
+
+html.js .lines.is-visible .line > span {
+  transform: none;
+}
+
+/* Two-tone headings: first line ink, second line grey (or the reverse with --soft). */
+.twoTone .line:nth-child(2) {
+  color: var(--color-grey-on-white);
+}
+
+.twoTone--soft .line:first-child {
+  color: var(--color-grey-on-white);
+}
+
+.twoTone--soft .line:nth-child(2) {
+  color: var(--color-ink);
+}
+
+/* Reduced motion (html.motion-reduced, set in the layout head): keep the fades, drop the movement. */
+html.motion-reduced {
+  scroll-behavior: auto;
+}
+
+html.js.motion-reduced .reveal {
+  transform: none;
+  transition: opacity 1s ease;
+  transition-delay: var(--delay, 0ms);
+}
+
+html.js.motion-reduced .lines .line > span {
+  opacity: 0;
+  transform: none;
+  transition: opacity 1s ease;
+  transition-delay: calc(var(--delay, 0ms) + var(--i, 0) * 90ms);
+}
+
+html.js.motion-reduced .lines.is-visible .line > span {
+  opacity: 1;
+}
+
+/* ---------- Photography ---------- */
+.photo {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  border-radius: var(--radius);
+  background: #15151a;
+  isolation: isolate;
+}
+
+/* Taller than its frame so it can drift with --pp (set by the parallax driver). */
+.photo__inner {
+  position: absolute;
+  inset: -7% 0;
+  transform: translate3d(0, calc((0.5 - var(--pp, 0.5)) * 12%), 0);
+  will-change: transform;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo--fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+html.js .photo--reveal {
+  clip-path: inset(9% 7% round var(--radius));
+  transition: clip-path 1.6s var(--ease-out);
+}
+
+html.js .photo--reveal img {
+  transform: scale(1.28);
+  transition: transform 2.2s var(--ease-out);
+}
+
+html.js .photo--reveal.is-visible {
+  clip-path: inset(0 round var(--radius));
+}
+
+html.js .photo--reveal.is-visible img {
+  transform: none;
+}
+
+html.js.motion-reduced .photo--reveal {
+  clip-path: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+html.js.motion-reduced .photo--reveal.is-visible {
+  opacity: 1;
+}
+
+html.js.motion-reduced .photo--reveal img {
+  transform: none;
+  transition: none;
+}
+
+/* Small "Concept render" tag on every render */
+.renderTag {
+  position: absolute;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  z-index: 3;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--color-ink);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.08rem;
+  line-height: 1;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.renderTag--dark {
+  background: rgba(10, 12, 16, 0.6);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* ---------- Inner page hero ---------- */
@@ -554,7 +812,7 @@ html.js .reveal.is-visible {
   }
 }
 
-/* Media placeholder blocks (gradient art stands in for photography) */
+/* Photo panel with a shade for overlaid text (inner-page heroes). */
 .art {
   position: relative;
   overflow: hidden;
@@ -563,68 +821,17 @@ html.js .reveal.is-visible {
   isolation: isolate;
 }
 
-.art::before {
-  content: '';
-  position: absolute;
-  inset: -30%;
-  background:
-    radial-gradient(40% 50% at 25% 30%, rgba(79, 125, 249, 0.9), transparent 70%),
-    radial-gradient(35% 45% at 75% 70%, rgba(143, 211, 255, 0.6), transparent 70%),
-    radial-gradient(60% 60% at 60% 20%, rgba(255, 255, 255, 0.08), transparent 70%);
-  filter: blur(20px);
-  animation: artDrift 18s ease-in-out infinite alternate;
-}
-
-.art::after {
+.art--photo::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 4rem 4rem;
-  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
+  z-index: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.05) 60%);
 }
 
-.art--warm::before {
-  background:
-    radial-gradient(45% 55% at 30% 70%, rgba(255, 140, 80, 0.85), transparent 70%),
-    radial-gradient(35% 45% at 75% 25%, rgba(255, 210, 120, 0.6), transparent 70%);
-}
-
-.art--mint::before {
-  background:
-    radial-gradient(45% 55% at 70% 65%, rgba(80, 220, 180, 0.8), transparent 70%),
-    radial-gradient(35% 45% at 25% 25%, rgba(143, 211, 255, 0.6), transparent 70%);
-}
-
-.art--light {
-  background: var(--color-surface);
-}
-
-.art--light::before {
-  opacity: 0.55;
-}
-
-.art--light::after {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.07) 1px, transparent 1px);
-}
-
-@keyframes artDrift {
-  from {
-    transform: translate3d(-4%, -3%, 0) rotate(0deg);
-  }
-  to {
-    transform: translate3d(4%, 3%, 0) rotate(8deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .art::before {
-    animation: none;
-  }
+.art--photo > :not(.photo) {
+  position: relative;
+  z-index: 1;
 }
 
 /* Lists */

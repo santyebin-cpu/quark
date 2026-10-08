@@ -3,18 +3,38 @@ import { withBase } from '../lib/paths';
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionNumber from '../components/SectionNumber.astro';
+import { site } from '../data/site';
 
-const offices = [
-  ['Headquarters', 'Quark Energy, Inc.\n1200 Lattice Way\nBoise, ID 83702'],
-  ['Module factory', '4400 Forge Road\nColumbus, OH 43217'],
-  ['Engineering', '550 South Tryon Street\nCharlotte, NC 28202'],
-  ['Idaho project office', '120 West 2nd South\nSoda Springs, ID 83276'],
-  ['Quark Europe', 'Keilaranta 1\n02150 Espoo, Finland'],
+// Each topic routes to the team that answers it; ?topic=<value> preselects one.
+const topics = [
+  { value: 'power', label: 'Buying power or steam', email: site.email.general },
+  { value: 'partners', label: 'Partnerships and sites', email: site.email.partners },
+  { value: 'investors', label: 'Investment', email: site.email.investors },
+  { value: 'suppliers', label: 'Supplier registration', email: site.email.suppliers },
+  { value: 'careers', label: 'Careers', email: site.email.careers },
+  { value: 'media', label: 'Media', email: site.email.media },
+  { value: 'general', label: 'Something else', email: site.email.general },
+];
+
+const lines = [
+  ['General', site.email.general],
+  ['Partnerships and sites', site.email.partners],
+  ['Investors', site.email.investors],
+  ['Suppliers', site.email.suppliers],
+  ['Careers', site.email.careers],
+  ['Media', site.email.media],
 ];
 ---
 
-<Layout title="Contact" description="Contact Quark about Hadron plants, Quark Heat, supplier registration, careers or media inquiries.">
-  <PageHero eyebrow="Contact" title="Get in touch" intro="Utilities, industrial customers, suppliers, journalists and neighbors: tell us what you need and the right team will reply within two business days." />
+<Layout
+  title="Contact"
+  description="Contact Qark Energy about buying power or steam, partnerships, investment, supplying Qark One, careers or media."
+>
+  <PageHero
+    eyebrow="Contact"
+    title="Get in touch"
+    intro="Utilities, industry, government, investors, suppliers and engineers: tell us what you need and we will route it to the right people."
+  />
 
   <section class="section pad-top-0">
     <div class="maxWidth">
@@ -22,6 +42,9 @@ const offices = [
         <div class="side">
           <SectionNumber n={2} />
           <h2 class="textH3 reveal">Send a message</h2>
+          <p class="contact__how reveal" style="--delay:100ms">
+            Sending opens your email app with the message addressed to the right team.
+          </p>
         </div>
         <form class="form reveal" method="post" action="#" data-contact-form novalidate>
           <div class="form__grid">
@@ -34,19 +57,13 @@ const offices = [
               <input id="email" name="email" type="email" autocomplete="email" required />
             </div>
             <div class="field">
-              <label for="org">Organization</label>
-              <input id="org" name="organization" type="text" autocomplete="organization" />
+              <label for="org">Organisation</label>
+              <input id="org" name="organisation" type="text" autocomplete="organization" />
             </div>
             <div class="field">
               <label for="topic">Topic</label>
               <select id="topic" name="topic">
-                <option>Hadron plants</option>
-                <option>Quark Heat</option>
-                <option>Supplier registration</option>
-                <option>Careers</option>
-                <option>Idaho project</option>
-                <option>Media</option>
-                <option>General</option>
+                {topics.map((t) => <option value={t.value} data-email={t.email}>{t.label}</option>)}
               </select>
             </div>
             <div class="field field--full">
@@ -60,10 +77,12 @@ const offices = [
           </div>
           <div class="form__actions">
             <button class="btnMain btnMain--solid" type="submit">
-              Send message
+              Write the email
               <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
             </button>
-            <p class="textSmall muted">We never share your information. See our <a href={withBase('/privacy')}>privacy policy</a>.</p>
+            <p class="textSmall form__privacy">
+              See our <a href={withBase('/privacy')}>privacy policy</a>.
+            </p>
           </div>
           <p class="form__status" role="status" aria-live="polite" data-form-status></p>
         </form>
@@ -76,36 +95,26 @@ const offices = [
       <div class="grid">
         <div class="side">
           <SectionNumber n={3} />
-          <h2 class="textH3 reveal">Offices</h2>
-        </div>
-        <ul class="offices">
-          {
-            offices.map(([k, v], i) => (
-              <li class="reveal" style={`--delay:${(i % 3) * 70}ms`}>
-                <p class="textSmall muted">{k}</p>
-                <p class="offices__addr">{v}</p>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="maxWidth">
-      <div class="grid">
-        <div class="side">
-          <SectionNumber n={4} />
           <h2 class="textH3 reveal">Direct lines</h2>
         </div>
-        <div class="prose reveal">
+        <div class="contact__lines reveal">
           <div class="rows">
-            <div class="row"><p class="row__label">General</p><p><a class="linkArrow" href="mailto:hello@quark.energy">hello@quark.energy</a></p></div>
-            <div class="row"><p class="row__label">Media</p><p><a class="linkArrow" href="mailto:press@quark.energy">press@quark.energy</a></p></div>
-            <div class="row"><p class="row__label">Suppliers</p><p><a class="linkArrow" href="mailto:suppliers@quark.energy">suppliers@quark.energy</a></p></div>
-            <div class="row"><p class="row__label">Careers</p><p><a class="linkArrow" href="mailto:careers@quark.energy">careers@quark.energy</a></p></div>
-            <div class="row"><p class="row__label">Idaho community line</p><p>+1 (208) 555-0140</p></div>
+            {
+              lines.map(([k, v]) => (
+                <div class="row">
+                  <p class="row__label">{k}</p>
+                  <p>
+                    <a class="linkArrow" href={`mailto:${v}`}>
+                      {v}
+                    </a>
+                  </p>
+                </div>
+              ))
+            }
+            <div class="row">
+              <p class="row__label">Office</p>
+              <p>{[site.legalName, ...site.address].join(', ')}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -114,6 +123,11 @@ const offices = [
 </Layout>
 
 <style>
+  .contact__how {
+    color: var(--color-text-muted);
+    max-width: 28rem;
+  }
+
   .form {
     grid-column: 1 / -1;
   }
@@ -147,7 +161,11 @@ const offices = [
     margin-top: 4rem;
   }
 
-  .form__actions a {
+  .form__privacy {
+    color: var(--color-text-muted);
+  }
+
+  .form__privacy a {
     text-decoration: underline;
   }
 
@@ -157,51 +175,41 @@ const offices = [
     min-height: 1.5em;
   }
 
-  .offices {
+  .contact__lines {
     grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0 1.6rem;
-  }
-
-  @media (min-width: 600px) {
-    .offices {
-      grid-template-columns: repeat(2, 1fr);
-    }
   }
 
   @media (min-width: 900px) {
-    .offices {
+    .contact__lines {
       grid-column: 4 / span 9;
-      grid-template-columns: repeat(3, 1fr);
     }
   }
 
-  .offices li {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    padding: 2.4rem 0 3.2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  .contact__lines .rows,
+  .contact__lines :global(.row) {
+    border-color: rgba(255, 255, 255, 0.15);
   }
 
-  .offices__addr {
-    white-space: pre-line;
-    line-height: 1.5;
+  .contact__lines :global(.row__label) {
+    color: var(--color-grey-on-black);
   }
 </style>
 
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
   const status = document.querySelector<HTMLElement>('[data-form-status]');
+  const topic = document.getElementById('topic') as HTMLSelectElement | null;
 
-  // Pre-fill subject from ?subject= links on news/careers pages.
+  // Pre-fill from links elsewhere on the site: ?topic=, ?subject= and the footer's ?email=.
   const params = new URLSearchParams(window.location.search);
+  const presetTopic = params.get('topic');
   const subject = params.get('subject');
   const email = params.get('email');
+  if (topic && presetTopic && [...topic.options].some((o) => o.value === presetTopic)) topic.value = presetTopic;
   if (subject) (document.getElementById('subject') as HTMLInputElement | null)?.setAttribute('value', subject);
   if (email) (document.getElementById('email') as HTMLInputElement | null)?.setAttribute('value', email);
 
+  // There is no form backend yet: compose the message in the visitor's own email app instead.
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!form.checkValidity()) {
@@ -209,8 +217,17 @@ const offices = [
       return;
     }
     const data = new FormData(form);
-    const name = String(data.get('name') || '').trim();
-    if (status) status.textContent = `Thanks${name ? `, ${name}` : ''}. Your message has been received and the ${data.get('topic')} team will reply within two business days.`;
-    form.reset();
+    const option = topic?.selectedOptions[0];
+    const to = option?.dataset.email ?? '';
+    const topicLabel = option?.textContent ?? 'Enquiry';
+    const subjectLine = String(data.get('subject') || '').trim() || topicLabel;
+    const body = [
+      String(data.get('message') || '').trim(),
+      '',
+      `${data.get('name')}${data.get('organisation') ? `, ${data.get('organisation')}` : ''}`,
+      String(data.get('email') || ''),
+    ].join('\n');
+    window.location.href = `mailto:${to}?subject=${encodeURIComponent(`[${topicLabel}] ${subjectLine}`)}&body=${encodeURIComponent(body)}`;
+    if (status) status.textContent = `Your email app should open with the message addressed to ${to}. If it does not, write to that address directly.`;
   });
 </script>

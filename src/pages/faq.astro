@@ -6,8 +6,8 @@ import SectionNumber from '../components/SectionNumber.astro';
 import { faq } from '../data/faq';
 ---
 
-<Layout title="Hadron FAQ" description="Frequently asked questions about the Hadron small modular reactor, the Idaho plant and Quark.">
-  <PageHero eyebrow="Hadron FAQ" title="Frequently asked<br />questions" intro="Straight answers about small modular reactors, the Hadron plant and how Quark works." />
+<Layout title="FAQ" description="Frequently asked questions about Qark One, thorium fuel, safety and Qark Energy.">
+  <PageHero eyebrow="FAQ" title="Frequently asked<br />questions" intro="Straight answers about Qark One, thorium and how we work." />
 
   {
     faq.map((group, gi) => (
@@ -47,7 +47,7 @@ import { faq } from '../data/faq';
           <h2 class="textH3 reveal">Still curious?</h2>
         </div>
         <div class="prose reveal">
-          <p>Our team answers questions from communities, customers and students every week.</p>
+          <p>If your question is not answered here, ask us directly.</p>
           <div class="pageHero__actions">
             <a class="btnMain btnMain--solid" href={withBase('/contact')}>
               Ask a question
@@ -97,12 +97,17 @@ import { faq } from '../data/faq';
     padding: 0.6rem;
     border: 1px solid var(--color-line);
     border-radius: 50%;
-    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), background 0.3s ease, color 0.3s ease;
+    transition:
+      transform 0.4s var(--ease-out),
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
-  .faq__q:hover .faq__icon {
-    background: var(--color-ink);
-    color: var(--color-white);
+  @media (hover: hover) and (pointer: fine) {
+    .faq__q:hover .faq__icon {
+      background: var(--color-ink);
+      color: var(--color-white);
+    }
   }
 
   .faq[open] .faq__icon {
@@ -112,6 +117,6 @@ import { faq } from '../data/faq';
   .faq__a {
     padding: 0 0 2.8rem;
     max-width: 64rem;
-    color: var(--color-grey-on-white);
+    color: var(--color-text-muted);
   }
 </style>

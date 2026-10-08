@@ -24,7 +24,6 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
             <li class="nav__link">
               <a class:list={['nav__item', { 'is-active': path.startsWith(withBase(item.href)) }]} href={withBase(item.href)}>
                 {item.label}
-                {item.registered && <span class="nav__r">®</span>}
                 <svg aria-hidden="true" class="nav__arrow">
                   <use href="#icon-arrow-top-right" />
                 </svg>
@@ -62,7 +61,6 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
               <li class="menuItem" style={`--i:${i}`}>
                 <a class="menuItem__link" href={withBase(item.href)}>
                   <h2>{item.label}</h2>
-                  {item.registered && <span class="menuItem__r">®</span>}
                   <svg aria-hidden="true" class="menuItem__arrow">
                     <use href="#icon-arrow-top-right" />
                   </svg>
@@ -187,12 +185,6 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     bottom: 0.9rem;
     height: 1px;
     background: currentColor;
-  }
-
-  .nav__r {
-    font-size: 0.7em;
-    transform: translateY(-0.4em);
-    margin-left: -0.3rem;
   }
 
   .nav__arrow {
@@ -362,7 +354,9 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     font-size: 4.4rem;
     letter-spacing: -0.14rem;
     line-height: 0.95;
-    transition: color 0.25s ease, padding-left 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition:
+      color 0.25s ease,
+      transform 0.4s var(--ease-out);
   }
 
   @media (min-width: 900px) {
@@ -372,14 +366,11 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     }
   }
 
-  .menuItem__link:hover {
-    padding-left: 1.2rem;
-    color: var(--color-glow);
-  }
-
-  .menuItem__r {
-    font-size: 1.4rem;
-    margin-top: 0.6rem;
+  @media (hover: hover) and (pointer: fine) {
+    .menuItem__link:hover {
+      transform: translateX(1.2rem);
+      color: var(--color-glow);
+    }
   }
 
   .menuItem__arrow {

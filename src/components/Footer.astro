@@ -11,8 +11,8 @@ import { primaryNav, secondaryNav, legalNav, site } from '../data/site';
         <Logo />
       </a>
       <p class="footer__tagline textH3">
-        Small reactors.<br />
-        <span>Firm, flexible, carbon-free energy for the century ahead.</span>
+        More power for India.<br />
+        <span>Firm, carbon-free electricity from thorium.</span>
       </p>
     </div>
 
@@ -25,7 +25,6 @@ import { primaryNav, secondaryNav, legalNav, site } from '../data/site';
               <li>
                 <a class="footer__link" href={withBase(item.href)}>
                   {item.label}
-                  {item.registered && <sup>®</sup>}
                 </a>
               </li>
             ))
@@ -47,11 +46,11 @@ import { primaryNav, secondaryNav, legalNav, site } from '../data/site';
         </ul>
       </nav>
       <div class="footer__col">
-        <p class="textSmall footer__heading">Headquarters</p>
+        <p class="textSmall footer__heading">Office</p>
         <p class="footer__text">
           {site.legalName}<br />
-          1200 Lattice Way<br />
-          {site.hq} 83702
+          {site.address.map((line) => <>{line}<br /></>)}
+          <a class="footer__mail" href={`mailto:${site.email.general}`}>{site.email.general}</a>
         </p>
         <div class="footer__social">
           <a href={site.social.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
@@ -71,13 +70,13 @@ import { primaryNav, secondaryNav, legalNav, site } from '../data/site';
             <svg><use href="#icon-arrow-right" /></svg>
           </button>
         </form>
-        <p class="footer__text muted">Quarterly updates on Hadron, licensing milestones and job openings.</p>
+        <p class="footer__text muted">Occasional updates on Qark One, thorium fuel and open roles.</p>
       </div>
     </div>
 
     <div class="footer__bottom">
       <p class="textSmall">© {site.year} {site.legalName.toUpperCase()}</p>
-      <p class="textSmall footer__note">The Hadron® reactor is a Quark technology.</p>
+      <p class="footer__note">{site.productLong}. Renders shown on this site are concept illustrations.</p>
       <ul class="footer__legal">
         {
           legalNav.map((item) => (
@@ -268,6 +267,16 @@ import { primaryNav, secondaryNav, legalNav, site } from '../data/site';
       margin-left: auto;
       margin-right: 4rem;
     }
+  }
+
+  .footer__note {
+    font-size: 1.1rem;
+    color: var(--color-grey-on-black);
+  }
+
+  .footer__mail {
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
   }
 
   .footer__legal {

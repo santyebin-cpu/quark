@@ -1,0 +1,182 @@
+---
+import { withBase } from '../lib/paths';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionNumber from '../components/SectionNumber.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/media';
+
+const uses = [
+  {
+    title: 'Chemicals and fertilisers',
+    body: 'Many reaction, distillation and drying steps run on medium-pressure steam that a reactor can supply continuously.',
+  },
+  {
+    title: 'Textiles',
+    body: 'Dyeing, washing and finishing lines use steam all day, in clusters that today largely burn coal.',
+  },
+  {
+    title: 'Pulp and paper',
+    body: 'Cooking and drying paper are among the largest steady steam loads in industry.',
+  },
+  {
+    title: 'Food and pharmaceuticals',
+    body: 'Cooking, evaporation and sterilisation need clean, reliable steam at moderate temperatures.',
+  },
+  {
+    title: 'Desalination',
+    body: 'Thermal desalination turns low-pressure steam into fresh water for coastal cities and industry.',
+  },
+  {
+    title: 'Data centres',
+    body: 'Firm, carbon-free electricity around the clock, from a plant that does not depend on fuel deliveries.',
+  },
+];
+---
+
+<Layout
+  title="Industry & Steam"
+  description="Qark One makes steam at about 285 °C around the clock, for electricity and, where a plant is designed for it, for industry and desalination."
+>
+  <PageHero
+    eyebrow="Industry & Steam"
+    title="Power and steam<br />for industry"
+    intro="A Qark One unit makes steam at about 285 °C, day and night. Most of it drives the turbine. Where a plant is designed for it, part of the steam can go straight to industry or to desalination."
+  />
+
+  <section class="section pad-top-0">
+    <div class="maxWidth">
+      <div class="ind__hero art art--photo reveal">
+        <Photo photo={photos.processPlant} fill reveal={false} sizes="100vw" eager />
+        <div class="ind__heroLabel onDark">
+          <p class="textH3">Steam at about 285 °C, around the clock.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={2} />
+          <h2 class="textH3 reveal">Industry runs on heat</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            Factories need heat as much as they need electricity, and in India most of that heat still comes from
+            burning coal, oil and gas in boilers that run around the clock.
+          </p>
+          <p>
+            Steam at the temperatures Qark One works at can serve many of those processes directly: drying, cooking,
+            evaporation, distillation and sterilisation. A reactor that does not stop to refuel can supply it as
+            steadily as a boiler, without burning fuel or emitting carbon.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section onDark darkBlock" data-dark>
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={3} />
+          <h2 class="textH3 reveal">Where the steam can work</h2>
+        </div>
+        <div class="ind__usesWrap">
+          <ul class="ind__uses">
+            {
+              uses.map((u, i) => (
+                <li class="reveal" style={`--delay:${(i % 2) * 90}ms`}>
+                  <h3 class="textH4">{u.title}</h3>
+                  <p class="ind__useText">{u.body}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="maxWidth">
+      <div class="grid">
+        <div class="side">
+          <SectionNumber n={4} />
+          <h2 class="textH3 reveal">Energy without running a reactor</h2>
+        </div>
+        <div class="prose reveal">
+          <p>
+            Qark One is intended to supply electricity and steam under long-term agreements, so customers buy energy
+            rather than becoming nuclear operators themselves.
+          </p>
+          <p>
+            If your site needs firm power, steam or water and you are planning for the 2030s, we would like to
+            understand your load.
+          </p>
+          <div class="pageHero__actions">
+            <a class="btnMain btnMain--solid" href={withBase('/contact?topic=power')}>
+              Talk to us about power or steam
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-arrow-top-right" /></svg>
+            </a>
+            <a class="btnMain" href={withBase('/qark-one#data')}>
+              Principal data
+              <svg class="btnMain__icon" aria-hidden="true"><use href="#icon-plus" /></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .ind__hero {
+    aspect-ratio: 16 / 7;
+    min-height: 32rem;
+    display: flex;
+    align-items: flex-end;
+    padding: 3rem;
+  }
+
+  .ind__heroLabel {
+    max-width: 56rem;
+    background: transparent;
+  }
+
+  .ind__usesWrap {
+    grid-column: 1 / -1;
+  }
+
+  @media (min-width: 900px) {
+    .ind__usesWrap {
+      grid-column: 4 / span 9;
+    }
+  }
+
+  .ind__uses {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 1.6rem;
+  }
+
+  @media (min-width: 700px) {
+    .ind__uses {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .ind__uses li {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 2.4rem 0 3.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .ind__useText {
+    color: var(--color-grey-on-black);
+  }
+</style>

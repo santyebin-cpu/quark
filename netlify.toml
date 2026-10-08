@@ -5,7 +5,7 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# Serve /hadron as hadron.html (Astro `build.format: "file"`).
+# Serve /qark-one as qark-one.html (Astro `build.format: "file"`).
 [[redirects]]
   from = "/*"
   to = "/:splat.html"

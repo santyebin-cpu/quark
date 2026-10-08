@@ -5,3 +5,6 @@ dist/
 npm-debug.log*
 .env
 .env.*
+
+# Impeccable review captures (regenerated each review)
+.impeccable/review/

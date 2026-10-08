@@ -1,13 +1,27 @@
+// Placeholder until the real domain is confirmed; every email address on the site derives from it.
+const emailDomain = 'qark.energy';
+
 export const site = {
-  name: 'Quark',
-  legalName: 'Quark Energy, Inc.',
-  tagline: 'Small modular reactors for a grid that never stands still.',
+  name: 'Qark Energy',
+  shortName: 'Qark',
+  legalName: 'Qark Energy',
+  tagline: 'Thorium-fuelled power for India.',
   description:
-    'Quark designs and builds the Hadron small modular reactor: a factory-fabricated, passively safe nuclear plant that delivers firm, flexible, carbon-free power and industrial heat.',
-  product: 'Hadron',
-  productMark: 'Hadron®',
-  hq: 'Boise, Idaho',
-  firstSite: 'Idaho',
+    'Qark Energy is developing Qark One, a thorium-fuelled small modular reactor for India: natural circulation, passive safety and about 300 MWe of firm, carbon-free power from each unit.',
+  product: 'Qark One',
+  productLong: 'Qark One · Thorium SMR',
+  country: 'India',
+  // The registered office address has not been supplied yet; the second line marks the placeholder.
+  address: ['Registered office, India', 'Full address to follow'],
+  email: {
+    general: `hello@${emailDomain}`,
+    partners: `partners@${emailDomain}`,
+    suppliers: `suppliers@${emailDomain}`,
+    investors: `investors@${emailDomain}`,
+    careers: `careers@${emailDomain}`,
+    media: `media@${emailDomain}`,
+    privacy: `privacy@${emailDomain}`,
+  },
   year: new Date().getFullYear(),
   social: {
     linkedin: 'https://www.linkedin.com/',
@@ -16,14 +30,14 @@ export const site = {
 };
 
 export const primaryNav = [
-  { label: 'Hadron', href: '/hadron', registered: true },
-  { label: 'Heat', href: '/heat' },
-  { label: 'Future', href: '/future' },
+  { label: 'Qark One', href: '/qark-one' },
+  { label: 'Thorium', href: '/thorium' },
+  { label: 'India', href: '/india' },
 ];
 
 export const secondaryNav = [
-  { label: 'Idaho', href: '/idaho' },
-  { label: 'Hadron FAQ', href: '/faq' },
+  { label: 'Industry & Steam', href: '/industry' },
+  { label: 'FAQ', href: '/faq' },
   { label: 'About Us', href: '/about' },
   { label: 'News', href: '/news' },
   { label: 'Suppliers', href: '/suppliers' },

@@ -1,14 +1,16 @@
 ---
 import { withBase } from '../lib/paths';
 import LegalLayout from '../layouts/LegalLayout.astro';
+import { site } from '../data/site';
 ---
 
-<LegalLayout title="Privacy Policy" description="How Quark collects, uses and protects personal information." updated="January 15, 2026">
+<LegalLayout title="Privacy Policy" description="How Qark Energy collects, uses and protects personal information." updated="3 October 2026">
   <h2>Information we collect</h2>
   <p>
-    We collect information you provide directly, such as your name, email address, organization and message when you
-    use our contact form, subscribe to updates or apply for a role. We also collect limited technical information
-    automatically, including IP address, browser type and pages visited.
+    We collect the information you send us directly, such as your name, email address, organisation and message when
+    you write to us, ask for updates or apply for a role. Our contact form does not store anything: it opens your own
+    email app with the message for you to send. Our hosting provider may log basic technical information, such as IP
+    address and browser type, to operate and secure the site.
   </p>
   <h2>How we use information</h2>
   <ul>
@@ -27,8 +29,9 @@ import LegalLayout from '../layouts/LegalLayout.astro';
   <p>We retain personal information only as long as needed for the purposes described above or as required by law.</p>
   <h2>Your rights</h2>
   <p>
-    Depending on where you live, you may have rights to access, correct or delete your personal information. To exercise
-    these rights, contact <a href="mailto:privacy@quark.energy">privacy@quark.energy</a>.
+    Under applicable law, including India’s Digital Personal Data Protection Act, 2023, you may have rights to access,
+    correct or erase your personal information. To exercise these rights, contact
+    <a href={`mailto:${site.email.privacy}`}>{site.email.privacy}</a>.
   </p>
   <h2>Cookies</h2>
   <p>See our <a href={withBase('/cookie')}>Cookie Notice</a> for details on the cookies this site uses.</p>
