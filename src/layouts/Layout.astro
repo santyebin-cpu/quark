@@ -17,10 +17,37 @@ interface Props {
 }
 
 const { title, description = site.description, dark = false } = Astro.props;
-const fullTitle = title === site.name ? `${site.name} | ${site.productLong}` : `${title} | ${site.name}`;
+// The home title leads with the brand and the plain-language product, which is what people search for.
+const fullTitle = title === site.name ? `${site.name} | Thorium Small Modular Reactor for India` : `${title} | ${site.name}`;
 const ogImage = await getImage({ src: shareImage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 const cleanPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/');
 const canonical = new URL(cleanPath, Astro.site);
+const isHome = cleanPath === '/';
+
+// Structured data so search engines can show the brand name, logo and site name.
+// Add `sameAs` profile URLs here once the real LinkedIn/X pages exist.
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': new URL('/#organization', Astro.site).href,
+  name: site.name,
+  legalName: site.legalName,
+  url: new URL('/', Astro.site).href,
+  logo: new URL('/icon-512.png', Astro.site).href,
+  description: site.description,
+  email: site.email.general,
+  areaServed: site.country,
+};
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': new URL('/#website', Astro.site).href,
+  name: site.name,
+  alternateName: [site.shortName, site.product],
+  url: new URL('/', Astro.site).href,
+  publisher: { '@id': organization['@id'] },
+};
+const jsonLd = isHome ? [organization, website] : [organization];
 ---
 
 <!doctype html>
@@ -32,7 +59,12 @@ const canonical = new URL(cleanPath, Astro.site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon-48.png')} type="image/png" sizes="48x48" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_IN" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content={site.name} />
@@ -41,7 +73,10 @@ const canonical = new URL(cleanPath, Astro.site);
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Concept render of a Qark One plant in cutaway" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
     <meta name="theme-color" content={dark ? '#000000' : '#ffffff'} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script is:inline>
       (function () {
         var root = document.documentElement;

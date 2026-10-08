@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qarkenergy.com/sitemap-index.xml
