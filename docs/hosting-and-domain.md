@@ -127,12 +127,17 @@ Built into the site:
 - Organization structured data (JSON-LD) on every page; WebSite structured data on the home page (in `src/layouts/Layout.astro`). Add the real LinkedIn/X profile URLs as `sameAs` there once they exist.
 - Icons for browsers, Google results and phones: `favicon.svg`, `favicon-48.png`, `apple-touch-icon.png`, `icon-512.png` (also the logo in structured data).
 
-One-time setup outside the code (search engines discover the site faster this way):
+Done in Google Search Console on 2026-10-09:
 
-1. Google Search Console → add a **Domain** property for `qarkenergy.com` (the existing `google-site-verification` TXT record may already verify it).
-2. Sitemaps → submit `https://qarkenergy.com/sitemap-index.xml`.
-3. URL Inspection → `https://qarkenergy.com/` → **Request indexing**.
-4. Bing Webmaster Tools → **Import from Google Search Console** (also covers DuckDuckGo and Yahoo, which use Bing).
+- Property **`https://qarkenergy.com/`** (URL prefix) added and verified with the HTML tag method: the `google-site-verification` meta tag in `src/layouts/Layout.astro`. Do not remove that tag, or the property becomes unverified.
+- Sitemap `https://qarkenergy.com/sitemap-index.xml` submitted. Search Console showed "Couldn't fetch" right after submitting; Googlebot can fetch it (200, `application/xml`), so this clears once Google next reads it.
+- Indexing requested for `https://qarkenergy.com/` (added to the priority crawl queue).
+- A **Domain** property for `qarkenergy.com` was also created but left unverified; it needs a DNS TXT record (Search Console → Verify → Cloudflare). The existing `google-site-verification` TXT record belongs to a different Google account.
+
+Still to do:
+
+- Bing Webmaster Tools → sign in → **Import from Google Search Console** (covers Bing, DuckDuckGo and Yahoo).
+- Create the company's LinkedIn (and X) pages, link them to the site, and add their URLs as `sameAs` in `Layout.astro`. Links from other sites are what move rankings for non-brand searches.
 
 ## Troubleshooting
 
